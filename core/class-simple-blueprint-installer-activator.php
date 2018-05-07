@@ -22,13 +22,15 @@
 class Simple_Blueprint_Installer_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Set option to redirect to new settings page of this plugin after activate
 	 *
-	 * Long Description.
+	 * When the plugin is activate this option control to redirect only the first time
 	 *
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+
+		add_option( 'sbi_do_activation_redirect', 'redirect' );
 
 	}
 

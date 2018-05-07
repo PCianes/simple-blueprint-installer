@@ -113,4 +113,78 @@ class Simple_Blueprint_Installer_Admin {
 
 	}
 
+	/**
+	 * Redirect to settings page the first time this plugin is activate
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function redirect_to_settings_page() {
+		if ( 'redirect' === get_option( 'sbi_do_activation_redirect', false ) ) {
+			update_option( 'sbi_do_activation_redirect', 'activate' );
+			wp_safe_redirect( admin_url( 'plugin-install.php?tab=sbi_blueprint' ) );
+			exit;
+		}
+	}
+
+	/**
+	 * Add new custom tabs into plugins-install.php
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param   array $tabs All tabs register in WordPress for plugin-install.php.
+	 */
+	public function add_custom_tabs( $tabs ) {
+		$tabs['sbi_blueprint'] = __( 'Blueprint', 'simple-blueprint-installer' );
+		$tabs['sbi_setup']     = '<span class="dashicons dashicons-admin-generic"></span>';
+		return $tabs;
+
+	}
+
+	/**
+	 * Control the blueprint tab of the plugin
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function set_plugin_blueprint_tab() {
+		global $wp_list_table, $paged;
+		$username = 'pablocianes';
+		$per_page = 10;
+		$fields   = array(
+			'banners' => true,
+			'icons'   => true,
+			'ratings' => false,
+			'rating'  => false,
+		);
+		$args     = array(
+			'user'     => $username,
+			'page'     => $paged,
+			'per_page' => $per_page,
+			'fields'   => $fields,
+		);
+
+		$api                  = plugins_api( 'query_plugins', $args );
+		$wp_list_table->items = $api->plugins;
+
+		$wp_list_table->set_pagination_args(
+			array(
+				'total_items' => $api->info['results'],
+				'per_page'    => $per_page,
+			)
+		);
+	}
+
+	/**
+	 * Control the settings page of the plugin
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function display_plugin_settings_tab() {
+
+		echo '<h2>SBI options</h2>';
+
+	}
+
 }

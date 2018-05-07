@@ -123,7 +123,7 @@ function plugin_name_render_admin_bar_css() {
 
 	$css_pattern = ob_get_clean();
 
-	vprintf( esc_html( $css_pattern ), esc_html( plugin_name_get_admin_bar_config( 'colors' ) ) );
+	vprintf( $css_pattern, plugin_name_get_admin_bar_config( 'colors' ) );
 }
 
 /**

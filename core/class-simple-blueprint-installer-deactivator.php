@@ -22,13 +22,15 @@
 class Simple_Blueprint_Installer_Deactivator {
 
 	/**
-	 * Short Description. (use period)
+	 * Delete option set in activation of this plugin
 	 *
-	 * Long Description.
+	 * When the plugin is activate this option control to redirect only the first time
 	 *
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
+
+		delete_option( 'sbi_do_activation_redirect' );
 
 	}
 

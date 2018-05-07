@@ -43,9 +43,9 @@ class Simple_Blueprint_Installer_Loader {
 	/**
 	 * Contaniner for the instance 'singleton' of this class
 	 *
-	 * @since 	1.0.0
+	 * @since   1.0.0
 	 * @access private
-	 * @var object		Simple_Blueprint_Installer_Loader
+	 * @var object      Simple_Blueprint_Installer_Loader
 	 */
 	private static $instance;
 
@@ -56,8 +56,8 @@ class Simple_Blueprint_Installer_Loader {
 	 */
 	private function __construct() {
 
-		$this->actions = array();
-		$this->filters = array();
+		$this->actions    = array();
+		$this->filters    = array();
 		$this->shortcodes = array();
 
 	}
@@ -91,15 +91,17 @@ class Simple_Blueprint_Installer_Loader {
 	}
 
 	/**
-	* Add a new shortcode to the collection to be registered with WordPress
-	*
-	* @since     1.0.0
-	* @param     string        $tag           The name of the new shortcode.
-    * @param     object        $component      A reference to the instance of the object on which the shortcode is defined.
-    * @param     string        $callback       The name of the function that defines the shortcode.
-	*/
+	 * Add a new shortcode to the collection to be registered with WordPress
+	 *
+	 * @since     1.0.0
+	 * @param     string $tag           The name of the new shortcode.
+	 * @param     object $component      A reference to the instance of the object on which the shortcode is defined.
+	 * @param     string $callback       The name of the function that defines the shortcode.
+	 * @param    int    $priority         Optional. The priority at which the function should be fired. Default is 10.
+	 * @param    int    $accepted_args    Optional. The number of arguments that should be passed to the $callback. Default is 1.
+	 */
 	public function add_shortcode( $tag, $component, $callback, $priority = 10, $accepted_args = 1 ) {
-	   	$this->shortcodes = $this->add( $this->shortcodes, $tag, $component, $callback, $priority, $accepted_args );
+		$this->shortcodes = $this->add( $this->shortcodes, $tag, $component, $callback, $priority, $accepted_args );
 	}
 
 	/**
@@ -138,18 +140,18 @@ class Simple_Blueprint_Installer_Loader {
 	 * Usage Simple_Blueprint_Installer_Loader::get_instance()->remove( $hook, $component, $callback );
 	 *
 	 * @since      1.0.0
-	 * @param      string               $hook             The name of the WordPress filter that is being registered.
-	 * @param      object               $component        A reference to the instance of the object on which the filter is defined.
-	 * @param      string               $callback         The name of the function definition on the $component.
+	 * @param      string $hook             The name of the WordPress filter that is being registered.
+	 * @param      object $component        A reference to the instance of the object on which the filter is defined.
+	 * @param      string $callback         The name of the function definition on the $component.
 	 */
 	public function remove( $hook, $component, $callback ) {
 		$index = $this->hook_index( $hook, $component, $callback );
-		if( isset( $this->filters[ $index ]  ) ) {
-			remove_filter( $this->filters[ $index ][ 'hook' ],  array( $this->filters[ $index ][ 'component' ], $this->filters[ $index ][ 'callback' ] ) );
+		if ( isset( $this->filters[ $index ] ) ) {
+			remove_filter( $this->filters[ $index ]['hook'], array( $this->filters[ $index ]['component'], $this->filters[ $index ]['callback'] ) );
 		}
 
-		if( isset( $this->actions[ $index ] ) ) {
-			remove_action( $this->actions[ $index ][ 'hook' ],  array( $this->filters[ $index ][ 'component' ], $this->filters[ $index ][ 'callback' ] ) );
+		if ( isset( $this->actions[ $index ] ) ) {
+			remove_action( $this->actions[ $index ]['hook'], array( $this->filters[ $index ]['component'], $this->filters[ $index ]['callback'] ) );
 		}
 	}
 
@@ -158,9 +160,9 @@ class Simple_Blueprint_Installer_Loader {
 	 *
 	 * @since       1.0.0
 	 * @access      protected
-	 * @param      string               $hook             The name of the WordPress filter that is being registered.
-	 * @param      object               $component        A reference to the instance of the object on which the filter is defined.
-	 * @param      string               $callback         The name of the function definition on the $component.
+	 * @param      string $hook             The name of the WordPress filter that is being registered.
+	 * @param      object $component        A reference to the instance of the object on which the filter is defined.
+	 * @param      string $callback         The name of the function definition on the $component.
 	 *
 	 * @return string
 	 */
@@ -177,18 +179,18 @@ class Simple_Blueprint_Installer_Loader {
 	public function run() {
 
 		foreach ( $this->filters as $hook ) {
-			$mixed_callback = ! empty( $hook[ 'component' ] ) ? array( $hook[ 'component' ], $hook[ 'callback' ] ) : $hook[ 'callback' ];
-			add_filter( $hook[ 'hook' ], $mixed_callback, $hook[ 'priority' ], $hook['accepted_args'] );
+			$mixed_callback = ! empty( $hook['component'] ) ? array( $hook['component'], $hook['callback'] ) : $hook['callback'];
+			add_filter( $hook['hook'], $mixed_callback, $hook['priority'], $hook['accepted_args'] );
 		}
 
 		foreach ( $this->actions as $hook ) {
-			$mixed_callback = ! empty( $hook[ 'component' ] ) ? array( $hook[ 'component' ], $hook['callback'] ) : $hook[ 'callback' ];
-			add_action( $hook[ 'hook' ], $mixed_callback, $hook[ 'priority' ], $hook[ 'accepted_args' ] );
+			$mixed_callback = ! empty( $hook['component'] ) ? array( $hook['component'], $hook['callback'] ) : $hook['callback'];
+			add_action( $hook['hook'], $mixed_callback, $hook['priority'], $hook['accepted_args'] );
 		}
 
 		foreach ( $this->shortcodes as $hook ) {
-			$mixed_callback = ! empty( $hook[ 'component' ] ) ? array( $hook[ 'component' ], $hook[ 'callback' ] ) : $hook[ 'callback' ];
-			add_shortcode( $hook[ 'hook' ], $mixed_callback );
+			$mixed_callback = ! empty( $hook['component'] ) ? array( $hook['component'], $hook['callback'] ) : $hook['callback'];
+			add_shortcode( $hook['hook'], $mixed_callback );
 		}
 
 	}
@@ -196,11 +198,11 @@ class Simple_Blueprint_Installer_Loader {
 	/**
 	 * Get an instance of this class as singleton
 	 *
-	 * @since 			1.0.0
-	 * @return object 	Simple_Blueprint_Installer_Loader
+	 * @since           1.0.0
+	 * @return object   Simple_Blueprint_Installer_Loader
 	 */
 	public static function get_instance() {
-		if( is_null( self::$instance ) ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new Simple_Blueprint_Installer_Loader();
 		}
 
