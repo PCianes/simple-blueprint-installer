@@ -153,51 +153,34 @@ class Simple_Blueprint_Installer_Admin {
 	}
 
 	/**
-	 * Control the blueprint tab of the plugin
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function set_plugin_blueprint_tab() {
-		Simple_Blueprint_Installer_Control::init_display( $this->display_plugin_blueprint_tab() );
-	}
-
-	/**
 	 * Display the blueprint page of the plugin
 	 *
 	 * @since    1.0.0
 	 * @access   public
 	 */
 	public function display_plugin_blueprint_tab() {
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+		Simple_Blueprint_Installer_Control::display_plugins( $this->get_plugins_blueprint_list() );
+	}
+
+	/**
+	 * Get the list with all plugins of the blueprint
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function get_plugins_blueprint_list() {
 
 		return array(
-			array(
-				'slug' => 'micropub',
-			),
-			array(
-				'slug' => 'semantic-linkbacks',
-			),
-			array(
-				'slug' => 'machete',
-			),
-			array(
-				'slug' => 'indieweb-post-kinds',
-			),
-			array(
-				'slug' => 'syndication-links',
-			),
-			array(
-				'slug' => 'bridgy-publish',
-			),
-			array(
-				'slug' => 'indieauth',
-			),
-			array(
-				'slug' => 'wp-uf2',
-			),
-			array(
-				'slug' => 'simple-location',
-			),
+			'micropub',
+			'semantic-linkbacks',
+			'machete',
+			'indieweb-post-kinds',
+			'syndication-links',
+			'bridgy-publish',
+			'indieauth',
+			'wp-uf2',
+			'simple-location',
 		);
 	}
 

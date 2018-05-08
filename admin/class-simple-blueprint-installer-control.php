@@ -65,8 +65,20 @@ class Simple_Blueprint_Installer_Control {
 		}
 
 		if ( ! empty( $_POST['plugin'] ) ) {
-			$plugin = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
+			$plugin_slug = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
 		}
+
+		wp_send_json( self::install_plugin( $plugin_slug ) );
+
+	}
+
+	/**
+	 * Install a plugin by slug
+	 *
+	 * @since    1.0.0
+	 * @param   string $plugin_slug Slug of the plugins to install
+	 */
+	public static function install_plugin( $plugin_slug ) {
 
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -76,7 +88,7 @@ class Simple_Blueprint_Installer_Control {
 		$api = plugins_api(
 			'plugin_information',
 			array(
-				'slug'   => $plugin,
+				'slug'   => $plugin_slug,
 				'fields' => array(
 					'short_description' => false,
 					'sections'          => false,
@@ -106,12 +118,10 @@ class Simple_Blueprint_Installer_Control {
 			$msg    = 'There was an error installing ' . $api->name . '.';
 		}
 
-		$json = array(
+		return array(
 			'status' => $status,
 			'msg'    => $msg,
 		);
-
-		wp_send_json( $json );
 
 	}
 
@@ -131,8 +141,20 @@ class Simple_Blueprint_Installer_Control {
 		}
 
 		if ( ! empty( $_POST['plugin'] ) ) {
-			$plugin = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
+			$plugin_slug = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
 		}
+
+		wp_send_json( self::activate_plugin( $plugin_slug ) );
+
+	}
+
+	/**
+	 * Activate a plugin by slug
+	 *
+	 * @since    1.0.0
+	 * @param   string $plugin_slug Slug of the plugins to activate
+	 */
+	public static function activate_plugin( $plugin_slug ) {
 
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -141,7 +163,7 @@ class Simple_Blueprint_Installer_Control {
 		$api = plugins_api(
 			'plugin_information',
 			array(
-				'slug'   => $plugin,
+				'slug'   => $plugin_slug,
 				'fields' => array(
 					'short_description' => false,
 					'sections'          => false,
@@ -160,7 +182,7 @@ class Simple_Blueprint_Installer_Control {
 		);
 
 		if ( $api->name ) {
-			$main_plugin_file = self::get_plugin_file( $plugin );
+			$main_plugin_file = self::get_plugin_file( $plugin_slug );
 			$status           = 'success';
 			if ( $main_plugin_file ) {
 				activate_plugin( $main_plugin_file );
@@ -171,15 +193,12 @@ class Simple_Blueprint_Installer_Control {
 			$msg    = 'There was an error activating ' . $api->name . '.';
 		}
 
-		$json = array(
+		return array(
 			'status' => $status,
 			'msg'    => $msg,
 		);
 
-		wp_send_json( $json );
-
 	}
-
 
 	/**
 	 * Init the display of the plugins.
@@ -187,59 +206,63 @@ class Simple_Blueprint_Installer_Control {
 	 * @since    1.0.0
 	 * @param   array $plugins Slugs of the plugins to display.
 	 */
-	public static function init_display( $plugins ) {
-	?>
-	<div class="sbi-plugin-installer">
-	<?php
-	require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	public static function display_plugins( $plugins ) {
+		?>
+		<div class="sbi-plugin-installer">
+		<?php
 
-	foreach ( $plugins as $plugin ) :
+		foreach ( $plugins as $plugin_slug ) :
 
-		$button_classes = 'install button';
-		$button_text    = __( 'Install Now', 'simple-blueprint-installer' );
-		$api            = plugins_api(
-			'plugin_information',
-			array(
-				'slug'   => sanitize_file_name( $plugin['slug'] ),
-				'fields' => array(
-					'short_description' => true,
-					'sections'          => false,
-					'requires'          => false,
-					'downloaded'        => true,
-					'last_updated'      => false,
-					'added'             => false,
-					'tags'              => false,
-					'compatibility'     => false,
-					'homepage'          => false,
-					'donate_link'       => false,
-					'icons'             => true,
-					'banners'           => true,
-				),
-			)
-		);
+			$button_classes = 'install button';
+			$button_text    = __( 'Install Now', 'simple-blueprint-installer' );
+			$api            = plugins_api(
+				'plugin_information',
+				array(
+					'slug'   => sanitize_file_name( $plugin_slug ),
+					'fields' => array(
+						'short_description' => true,
+						'sections'          => false,
+						'requires'          => false,
+						'downloaded'        => true,
+						'last_updated'      => true,
+						'added'             => false,
+						'tags'              => false,
+						'compatibility'     => false,
+						'homepage'          => false,
+						'donate_link'       => false,
+						'icons'             => true,
+						'banners'           => true,
+					),
+				)
+			);
 
-		if ( ! is_wp_error( $api ) ) {
-			$main_plugin_file = self::get_plugin_file( $plugin['slug'] );
+			if ( ! is_wp_error( $api ) ) {
+				$main_plugin_file = self::get_plugin_file( $plugin_slug );
 
-			if ( self::check_file_extension( $main_plugin_file ) ) {
-				if ( is_plugin_active( $main_plugin_file ) ) {
-					$button_classes = 'button disabled';
-					$button_text    = __( 'Activated', 'simple-blueprint-installer' );
-				} else {
-					$button_classes = 'activate button button-primary';
-					$button_text    = __( 'Activate', 'simple-blueprint-installer' );
+				if ( self::check_file_extension( $main_plugin_file ) ) {
+					if ( is_plugin_active( $main_plugin_file ) ) {
+						$button_classes = 'button disabled';
+						$button_text    = __( 'Activated', 'simple-blueprint-installer' );
+					} else {
+						$button_classes = 'activate button button-primary';
+						$button_text    = __( 'Activate', 'simple-blueprint-installer' );
+					}
 				}
+
+				if ( isset( $api->icons['1x'] ) ) {
+					$icon = $api->icons['1x'];
+				} else {
+					$icon = $api->icons['default'];
+				}
+
+				include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-view.php';
+
 			}
 
-			// Send plugin data to template.
-			self::render_template( $plugin, $api, $button_text, $button_classes );
-
-		}
-
-	endforeach;
-	?>
-	</div>
-	<?php
+		endforeach;
+		?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -277,48 +300,6 @@ class Simple_Blueprint_Installer_Control {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Render display template for each plugin.
-	 *
-	 * @since 1.0.0
-	 * @param array  $plugin Original data passed to init().
-	 * @param array  $api Results from plugins_api.
-	 * @param string $button_text Text for the button.
-	 * @param string $button_classes Classnames for the button.
-	 */
-	public static function render_template( $plugin, $api, $button_text, $button_classes ) {
-		if ( isset( $api->icons['1x'] ) ) {
-			  $icon = $api->icons['1x'];
-		} else {
-			$icon = $api->icons['default'];
-		}
-		?>
-		<div class="plugin">
-		  <div class="plugin-wrap">
-			  <img src="<?php echo $icon; ?>" alt="">
-		   <h2><?php echo $api->name; ?></h2>
-		   <p><?php echo $api->short_description; ?></p>
-		   <p class="plugin-author"><?php _e( 'By', 'simple-blueprint-installer' ); ?> <?php echo $api->author; ?></p>
-		   </div>
-		   <ul class="activation-row">
-		   <li>
-			  <a class="<?php echo $button_classes; ?>"
-				  data-slug="<?php echo $api->slug; ?>"
-							data-name="<?php echo $api->name; ?>"
-								href="<?php echo get_admin_url(); ?>/update.php?action=install-plugin&amp;plugin=<?php echo $api->slug; ?>&amp;_wpnonce=<?php echo wp_create_nonce( 'install-plugin_' . $api->slug ); ?>">
-						<?php echo $button_text; ?>
-			  </a>
-		   </li>
-		   <li>
-			  <a href="https://wordpress.org/plugins/<?php echo $api->slug; ?>/" target="_blank">
-					<?php _e( 'More Details', 'simple-blueprint-installer' ); ?>
-			  </a>
-		   </li>
-			</ul>
-		 </div>
-		<?php
 	}
 
 }

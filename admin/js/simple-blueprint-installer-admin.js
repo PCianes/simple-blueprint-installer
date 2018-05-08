@@ -86,7 +86,7 @@ jQuery( document ).ready(
 				}
 			);
 
-		};
+		}
 
 		/*
 		*  Install/Activate Button Click
@@ -115,6 +115,7 @@ jQuery( document ).ready(
 					if ( currentPlugin.hasClass( 'activate' ) ) {
 						sbi_installer.activate_plugin( currentPlugin, pluginSlug );
 					}
+
 				}
 			}
 		);

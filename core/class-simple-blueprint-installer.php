@@ -173,7 +173,7 @@ class Simple_Blueprint_Installer {
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'redirect_to_settings_page' );
 		$this->loader->add_filter( 'install_plugins_tabs', $plugin_admin, 'add_custom_tabs' );
-		$this->loader->add_action( 'install_plugins_sbi_blueprint', $plugin_admin, 'set_plugin_blueprint_tab' );
+		$this->loader->add_action( 'install_plugins_sbi_blueprint', $plugin_admin, 'display_plugin_blueprint_tab' );
 		$this->loader->add_action( 'install_plugins_sbi_setup', $plugin_admin, 'display_plugin_settings_tab' );
 
 		$plugin_installer_control = new Simple_Blueprint_Installer_Control( $this->get_plugin_name(), $this->get_version() );
