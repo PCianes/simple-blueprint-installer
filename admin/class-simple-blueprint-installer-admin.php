@@ -62,9 +62,9 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function load_dependencies() {
 		/**
-		 * The class responsible for ...
+		 * The class responsible for install and activate plugins in the same screen
 		 */
-		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-simple-blueprint-installer-class-name.php'; .
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-simple-blueprint-installer-control.php';
 	}
 
 	/**
@@ -111,6 +111,18 @@ class Simple_Blueprint_Installer_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-blueprint-installer-admin.js', array( 'jquery' ), $this->version, false );
 
+		wp_localize_script(
+			$this->plugin_name,
+			'sbi_installer_localize',
+			array(
+				'ajax_url'      => admin_url( 'admin-ajax.php' ),
+				'admin_nonce'   => wp_create_nonce( 'sbi_installer_nonce' ),
+				'install_btn'   => __( 'Install Now', 'simple-blueprint-installer' ),
+				'activate_btn'  => __( 'Activate', 'simple-blueprint-installer' ),
+				'installed_btn' => __( 'Activated', 'simple-blueprint-installer' ),
+			)
+		);
+
 	}
 
 	/**
@@ -138,7 +150,6 @@ class Simple_Blueprint_Installer_Admin {
 		$tabs['sbi_blueprint'] = __( 'Blueprint', 'simple-blueprint-installer' );
 		$tabs['sbi_setup']     = '<span class="dashicons dashicons-admin-generic"></span>';
 		return $tabs;
-
 	}
 
 	/**
@@ -148,43 +159,56 @@ class Simple_Blueprint_Installer_Admin {
 	 * @access   public
 	 */
 	public function set_plugin_blueprint_tab() {
-		global $wp_list_table, $paged;
-		$username = 'pablocianes';
-		$per_page = 10;
-		$fields   = array(
-			'banners' => true,
-			'icons'   => true,
-			'ratings' => false,
-			'rating'  => false,
-		);
-		$args     = array(
-			'user'     => $username,
-			'page'     => $paged,
-			'per_page' => $per_page,
-			'fields'   => $fields,
-		);
+		Simple_Blueprint_Installer_Control::init_display( $this->display_plugin_blueprint_tab() );
+	}
 
-		$api                  = plugins_api( 'query_plugins', $args );
-		$wp_list_table->items = $api->plugins;
+	/**
+	 * Display the blueprint page of the plugin
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function display_plugin_blueprint_tab() {
 
-		$wp_list_table->set_pagination_args(
+		return array(
 			array(
-				'total_items' => $api->info['results'],
-				'per_page'    => $per_page,
-			)
+				'slug' => 'micropub',
+			),
+			array(
+				'slug' => 'semantic-linkbacks',
+			),
+			array(
+				'slug' => 'machete',
+			),
+			array(
+				'slug' => 'indieweb-post-kinds',
+			),
+			array(
+				'slug' => 'syndication-links',
+			),
+			array(
+				'slug' => 'bridgy-publish',
+			),
+			array(
+				'slug' => 'indieauth',
+			),
+			array(
+				'slug' => 'wp-uf2',
+			),
+			array(
+				'slug' => 'simple-location',
+			),
 		);
 	}
 
 	/**
-	 * Control the settings page of the plugin
+	 * Display the settings page of the plugin
 	 *
 	 * @since    1.0.0
 	 * @access   public
 	 */
 	public function display_plugin_settings_tab() {
-
 		echo '<h2>SBI options</h2>';
-
 	}
 
 }
