@@ -93,8 +93,7 @@ jQuery( document ).ready(
 		*
 		*  @since 1.0.0
 		*/
-		$( document ).on(
-			'click', '.sbi-plugin-installer a.button', function(event){
+		$( document ).on('click', '#the-list-blueprint .plugin-card .action-links a.button', function(event){
 				var currentPlugin = $( this ),
 				pluginSlug        = currentPlugin.data( 'slug' );
 

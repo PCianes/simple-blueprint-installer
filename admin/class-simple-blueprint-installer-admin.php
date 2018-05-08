@@ -172,6 +172,7 @@ class Simple_Blueprint_Installer_Admin {
 	public function get_plugins_blueprint_list() {
 
 		return array(
+			'aryo-activity-log',
 			'micropub',
 			'semantic-linkbacks',
 			'machete',

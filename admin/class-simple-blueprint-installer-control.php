@@ -208,7 +208,7 @@ class Simple_Blueprint_Installer_Control {
 	 */
 	public static function display_plugins( $plugins ) {
 		?>
-		<div class="sbi-plugin-installer">
+		<div id="the-list-blueprint">
 		<?php
 
 		foreach ( $plugins as $plugin_slug ) :
