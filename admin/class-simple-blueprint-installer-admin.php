@@ -160,29 +160,7 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	public function display_plugin_blueprint_tab() {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		Simple_Blueprint_Installer_Control::display_plugins( $this->get_plugins_blueprint_list() );
-	}
-
-	/**
-	 * Get the list with all plugins of the blueprint
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function get_plugins_blueprint_list() {
-
-		return array(
-			'aryo-activity-log',
-			'micropub',
-			'semantic-linkbacks',
-			'machete',
-			'indieweb-post-kinds',
-			'syndication-links',
-			'bridgy-publish',
-			'indieauth',
-			'wp-uf2',
-			'simple-location',
-		);
+		Simple_Blueprint_Installer_Control::display_plugins();
 	}
 
 	/**

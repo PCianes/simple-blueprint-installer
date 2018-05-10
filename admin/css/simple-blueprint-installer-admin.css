@@ -8,3 +8,7 @@
 	display: flex;
     flex-wrap: wrap;
  }
+
+ #blueprint_plugins{
+	width: 90%;
+ }

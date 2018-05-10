@@ -206,63 +206,90 @@ class Simple_Blueprint_Installer_Control {
 	 * @since    1.0.0
 	 * @param   array $plugins Slugs of the plugins to display.
 	 */
-	public static function display_plugins( $plugins ) {
-		?>
-		<div id="the-list-blueprint">
-		<?php
+	public static function display_plugins() {
 
-		foreach ( $plugins as $plugin_slug ) :
+		$plugins_string = get_option( 'sbi_plugins_string' );
 
-			$button_classes = 'install button';
-			$button_text    = __( 'Install Now', 'simple-blueprint-installer' );
-			$api            = plugins_api(
-				'plugin_information',
-				array(
-					'slug'   => sanitize_file_name( $plugin_slug ),
-					'fields' => array(
-						'short_description' => true,
-						'sections'          => false,
-						'requires'          => false,
-						'downloaded'        => true,
-						'last_updated'      => true,
-						'added'             => false,
-						'tags'              => false,
-						'compatibility'     => false,
-						'homepage'          => false,
-						'donate_link'       => false,
-						'icons'             => true,
-						'banners'           => true,
-					),
-				)
-			);
+		if ( isset( $_POST['blueprint_register_nonce'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce'], 'blueprint_generate_nonce' ) ) {
+			$plugins_string = sanitize_text_field( $_POST[ 'blueprint_plugins' ] );
+			update_option( 'sbi_plugins_string', $plugins_string, true );
+		}
 
-			if ( ! is_wp_error( $api ) ) {
-				$main_plugin_file = self::get_plugin_file( $plugin_slug );
+		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-input-view.php';
 
-				if ( self::check_file_extension( $main_plugin_file ) ) {
-					if ( is_plugin_active( $main_plugin_file ) ) {
-						$button_classes = 'button disabled';
-						$button_text    = __( 'Activated', 'simple-blueprint-installer' );
-					} else {
-						$button_classes = 'activate button button-primary';
-						$button_text    = __( 'Activate', 'simple-blueprint-installer' );
+		$plugins_array = self::comma_separated_to_array( $plugins_string );
+
+		if ( $plugins_array ) :
+			foreach ( $plugins_array as $plugin_slug ) :
+				$button_classes = 'install button';
+				$button_text    = esc_html__( 'Install Now', 'simple-blueprint-installer' );
+				$api            = plugins_api(
+					'plugin_information',
+					array(
+						'slug'   => sanitize_file_name( $plugin_slug ),
+						'fields' => array(
+							'short_description' => true,
+							'sections'          => false,
+							'requires'          => false,
+							'downloaded'        => true,
+							'last_updated'      => true,
+							'added'             => false,
+							'tags'              => false,
+							'compatibility'     => false,
+							'homepage'          => false,
+							'donate_link'       => false,
+							'icons'             => true,
+							'banners'           => true,
+						),
+					)
+				);
+
+				if ( ! is_wp_error( $api ) ) {
+					$main_plugin_file = self::get_plugin_file( $plugin_slug );
+
+					if ( self::check_file_extension( $main_plugin_file ) ) {
+						if ( is_plugin_active( $main_plugin_file ) ) {
+							$button_classes = 'button disabled';
+							$button_text    = esc_html__( 'Activated', 'simple-blueprint-installer' );
+						} else {
+							$button_classes = 'activate button button-primary';
+							$button_text    = esc_html__( 'Activate', 'simple-blueprint-installer' );
+						}
 					}
+
+					if ( isset( $api->icons['1x'] ) ) {
+						$icon = $api->icons['1x'];
+					} else {
+						$icon = $api->icons['default'];
+					}
+
+					include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-view.php';
+
 				}
 
-				if ( isset( $api->icons['1x'] ) ) {
-					$icon = $api->icons['1x'];
-				} else {
-					$icon = $api->icons['default'];
-				}
-
-				include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-view.php';
-
-			}
-
-		endforeach;
+			endforeach;
+		endif;
 		?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * A method to separate in array the input of plugins by the user
+	 *
+	 * @since    1.0.0
+	 * @param   string $plugins_string The slugs of the plugins input by the user.
+	 * @return  $plugins_array
+	 */
+	public static function comma_separated_to_array( $plugins_string ) {
+
+		$plugins_array = explode( ',', $plugins_string );
+
+		foreach( $plugins_array as $key => $value ) {
+			$plugins_array[ $key ] = trim( $value );
+		}
+
+		return array_diff( $plugins_array, array('') );
 	}
 
 	/**
