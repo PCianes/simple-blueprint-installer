@@ -178,6 +178,8 @@ class Simple_Blueprint_Installer {
 
 		$plugin_installer_control = new Simple_Blueprint_Installer_Control( $this->get_plugin_name(), $this->get_version() );
 
+		$this->loader->add_action( 'wp_ajax_sbi_plugins_operate', $plugin_installer_control, 'sbi_plugins_operate' );
+		$this->loader->add_action( 'wp_ajax_sbi_plugins_installer', $plugin_installer_control, 'sbi_plugins_installer' );
 		$this->loader->add_action( 'wp_ajax_sbi_plugin_installer', $plugin_installer_control, 'sbi_plugin_installer' );
 		$this->loader->add_action( 'wp_ajax_sbi_plugin_activation', $plugin_installer_control, 'sbi_plugin_activation' );
 

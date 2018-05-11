@@ -29,16 +29,8 @@
 	<a href="#" id="sbi-danger-button" class="button button-primary"><?php esc_html_e( 'Show & hide \'danger\' buttons', 'simple-blueprint-installer' ); ?></a>
 </div>
 <div class="sbi-button-actions sbi-danger-buttons" style="display: none;">
-	<form action="#" method="post">
-		<input type="submit" class="button button-secondary sbi-delete-button" value="<?php esc_html_e( 'Delete all plugins installed', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce_delete" name="blueprint_register_nonce_delete" value="<?php echo wp_create_nonce('blueprint_generate_nonce_delete'); ?>" />
-		<input type="hidden" id="sbi-delete" name="sbi-delete" value="sbi-delete"/>
-	</form>
-	<form action="#" method="post">
-		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Install all plugins set here', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce_install" name="blueprint_register_nonce_install" value="<?php echo wp_create_nonce('blueprint_generate_nonce_install'); ?>" />
-		<input type="hidden" id="sbi-install" name="sbi-install" value="sbi-install"/>
-	</form>
+	<a href="#" id="sbi-delete-button" class="button sbi-delete-button"><?php esc_html_e( '¡Delete all plugins!', 'simple-blueprint-installer' ); ?></a>
+	<a href="#" id="sbi-install-button" class="button"><?php esc_html_e( 'Install all plugins set here', 'simple-blueprint-installer' ); ?></a>
 	<form action="#" method="post">
 		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Activate all plugins set here', 'simple-blueprint-installer' ); ?>">
 		<input type="hidden" id="blueprint_register_nonce_activate" name="blueprint_register_nonce_activate" value="<?php echo wp_create_nonce('blueprint_generate_nonce_activate'); ?>" />

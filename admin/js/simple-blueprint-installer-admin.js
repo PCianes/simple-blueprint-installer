@@ -1,5 +1,15 @@
 var sbi_installer = sbi_installer || {};
 
+function checkValue( value, array ){
+		for( var i=0; i < array.length; i++ ){
+			if( array[i] == value ){
+				return true;
+				break;
+			}
+		}
+		return false;
+ }
+
 jQuery( document ).ready(
 	function($) {
 
@@ -10,6 +20,63 @@ jQuery( document ).ready(
 		$('#sbi-danger-button').click( function(){
 			$('.sbi-danger-buttons').toggle();
 		});
+
+		$('#sbi-install-button').click( function(){
+			sbi_installer.operate_plugins( $(this), 'sbi_plugins_installer', 'install' );
+		});
+
+		$('#sbi-delete-button').click( function(){
+			sbi_installer.operate_plugins( $(this), 'sbi_plugins_operate', 'delete' );
+		});
+
+		/**
+		 *  Install all the plugins set in the blueprint
+		 *
+		 *  @since 1.0.0
+		 */
+		sbi_installer.operate_plugins = function( button, $action, $make ){
+			isLoading = true;
+			button.addClass( 'installing' );
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: sbi_installer_localize.ajax_url,
+					data: {
+						action: $action,
+						nonce: sbi_installer_localize.admin_nonce,
+						make: $make,
+						dataType: 'json'
+					},
+					success: function(data) {
+						if ( data ) {
+							button.removeClass( 'installing' );
+						}
+						isLoading = false;
+						if ( 'install' == $make ) {
+							$('#the-list-blueprint .plugin-card .action-links a.button').each(function( index ) {
+								console.log($(this));
+									var currentPlugin = $( this ),
+									pluginSlug        = currentPlugin.data( 'slug' ),
+									installedPlugins	= data.installed;
+									if ( checkValue( pluginSlug, installedPlugins ) ) {
+										currentPlugin.attr( 'class', 'activate button button-primary' );
+										currentPlugin.html( sbi_installer_localize.activate_btn );
+									}
+							});
+						}
+						if ( 'delete' == $make ) {
+							$('.plugin-card').remove();
+						}
+					},
+					error: function( xhr, status, error ) {
+						console.log( status );
+						button.removeClass( 'installing' );
+						isLoading = false;
+					}
+				}
+			);
+		}
 
 		/**
 		*  Install the plugin

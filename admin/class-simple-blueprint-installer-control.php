@@ -50,6 +50,79 @@ class Simple_Blueprint_Installer_Control {
 	}
 
 	/**
+	 * An Ajax method to operate with all plugins. Return $json to admin frontend.
+	 *
+	 * @since    1.0.0
+	 */
+	public function sbi_plugins_operate() {
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'simple-blueprint-installer' ) );
+		}
+
+		if ( ! check_ajax_referer( 'sbi_installer_nonce', 'nonce' ) ) {
+			wp_die( esc_html__( 'Error - unable to verify nonce, please try again.', 'simple-blueprint-installer' ) );
+		}
+
+		if ( ! empty( $_POST['make'] ) ) {
+			$make = sanitize_text_field( wp_unslash( $_POST['make'] ) );
+		}
+
+		if ( 'delete' == $make ) {
+			self::delete_all_plugins_installed( true );
+			$response = array(
+				'status' 		=> 'success',
+				'msg'			=> 'delete all',
+			);
+		}
+
+		wp_send_json( $response );
+	}
+
+	/**
+	 * An Ajax method for installing all plugins. Return $json to admin frontend.
+	 *
+	 * @since    1.0.0
+	 */
+	public function sbi_plugins_installer() {
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'simple-blueprint-installer' ) );
+		}
+
+		if ( ! check_ajax_referer( 'sbi_installer_nonce', 'nonce' ) ) {
+			wp_die( esc_html__( 'Error - unable to verify nonce, please try again.', 'simple-blueprint-installer' ) );
+		}
+
+		$plugins_string = get_option( 'sbi_plugins_blueprint' );
+		$plugins_array = self::comma_separated_to_array( $plugins_string );
+		$all_plugins_installed_by_array = self::comma_separated_to_array( self::get_all_plugins_installed_by_slug() );
+		$plugins_installed = array();
+		$plugins_not_installed = array();
+
+		foreach ( $plugins_array as $plugin_slug ) {
+			if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
+				continue;
+			}
+			$response = self::install_plugin( $plugin_slug );
+
+			if ( 'success' == $response['status'] ) {
+				$plugins_installed[] = $plugin_slug;
+			} else {
+				$plugins_not_installed[] = $plugin_slug;
+			}
+		}
+
+		$response = array(
+			'status' 		=> 'success',
+			'installed'		=> $plugins_installed,
+			'not_installed' => $plugins_not_installed
+		);
+
+		wp_send_json( $response );
+	}
+
+	/**
 	 * An Ajax method for installing plugin. Return $json to admin frontend.
 	 *
 	 * @since    1.0.0
@@ -121,6 +194,7 @@ class Simple_Blueprint_Installer_Control {
 		return array(
 			'status' => $status,
 			'msg'    => $msg,
+			'plugin' => $plugin_slug,
 		);
 
 	}
@@ -274,29 +348,12 @@ class Simple_Blueprint_Installer_Control {
 			$blueprint = true;
 		}
 
-		if ( isset( $_POST['sbi-delete'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_delete'], 'blueprint_generate_nonce_delete' ) ) {
-			self::delete_all_plugins_installed( true );
-			$plugins_string = '';
-			$blueprint = true;
-		}
-
 		if ( isset( $_POST['sbi-deactivate'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_deactivate'], 'blueprint_generate_nonce_deactivate' ) ) {
 			self::delete_all_plugins_installed();
 		}
 
 		if ( isset( $_POST['sbi-update'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_update'], 'blueprint_generate_nonce_update' ) ) {
 			$plugins_string = self::get_all_plugins_installed_by_slug();
-		}
-
-		if ( isset( $_POST['sbi-install'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_install'], 'blueprint_generate_nonce_install' ) ) {
-			$plugins_string = get_option( 'sbi_plugins_blueprint' );
-			$plugins_array = self::comma_separated_to_array( $plugins_string );
-			foreach ( $plugins_array as $plugin_slug ) {
-				if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
-					continue;
-				}
-				self::install_plugin( $plugin_slug );
-			}
 		}
 
 		if ( isset( $_POST['sbi-activate'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_activate'], 'blueprint_generate_nonce_activate' ) ) {
