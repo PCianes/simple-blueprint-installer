@@ -4,11 +4,17 @@
  */
 
  #the-list-blueprint {
-	margin-top: 50px;
+	margin-top: 25px;
 	display: flex;
     flex-wrap: wrap;
  }
 
- #blueprint_plugins{
+ #blueprint_plugins {
 	width: 90%;
+ }
+
+ .sbi-button-actions{
+	 display: flex;
+	 justify-content: space-evenly;
+	 margin-top: 25px;
  }

@@ -160,7 +160,7 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	public function display_plugin_blueprint_tab() {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		Simple_Blueprint_Installer_Control::display_plugins();
+		Simple_Blueprint_Installer_Control::setup_blueprint();
 	}
 
 	/**
