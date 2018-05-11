@@ -18,3 +18,15 @@
 	 justify-content: space-evenly;
 	 margin-top: 25px;
  }
+
+ #sbi-danger-button {
+	background: #F8931F;
+	border-color: #F8931F;
+	text-shadow: none;
+	box-shadow: none;
+ }
+
+ .sbi-danger-buttons .sbi-delete-button {
+	 color: red;
+ }
+

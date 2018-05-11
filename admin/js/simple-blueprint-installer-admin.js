@@ -7,6 +7,10 @@ jQuery( document ).ready(
 
 		var isLoading = false;
 
+		$('#sbi-danger-button').click( function(){
+			$('.sbi-danger-buttons').toggle();
+		});
+
 		/**
 		*  Install the plugin
 		*
@@ -41,6 +45,7 @@ jQuery( document ).ready(
 							currentPlugin.removeClass( 'installing' );
 						}
 						isLoading = false;
+						console.log(pluginSlug);
 					},
 					error: function( xhr, status, error ) {
 						console.log( status );
@@ -78,6 +83,7 @@ jQuery( document ).ready(
 							}
 						}
 						isLoading = false;
+						console.log(pluginSlug);
 					},
 					error: function( xhr, status, error ) {
 						console.log( status );
