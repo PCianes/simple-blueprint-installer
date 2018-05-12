@@ -29,6 +29,14 @@ jQuery( document ).ready(
 			sbi_installer.operate_plugins( $(this), 'sbi_plugins_operate', 'delete' );
 		});
 
+		$('#sbi-activate-button').click( function(){
+			sbi_installer.operate_plugins( $(this), 'sbi_plugins_operate', 'activate' );
+		});
+
+		$('#sbi-deactivate-button').click( function(){
+			sbi_installer.operate_plugins( $(this), 'sbi_plugins_operate', 'deactivate' );
+		});
+
 		/**
 		 *  Install all the plugins set in the blueprint
 		 *
@@ -53,20 +61,42 @@ jQuery( document ).ready(
 							button.removeClass( 'installing' );
 						}
 						isLoading = false;
-						if ( 'install' == $make ) {
-							$('#the-list-blueprint .plugin-card .action-links a.button').each(function( index ) {
-								console.log($(this));
-									var currentPlugin = $( this ),
-									pluginSlug        = currentPlugin.data( 'slug' ),
-									installedPlugins	= data.installed;
-									if ( checkValue( pluginSlug, installedPlugins ) ) {
-										currentPlugin.attr( 'class', 'activate button button-primary' );
-										currentPlugin.html( sbi_installer_localize.activate_btn );
-									}
-							});
-						}
-						if ( 'delete' == $make ) {
-							$('.plugin-card').remove();
+						switch ( $make ) {
+							case 'install':
+									$('#the-list-blueprint .plugin-card .action-links a.button').each(function( index ) {
+										var currentPlugin = $( this ),
+										pluginSlug        = currentPlugin.data( 'slug' );
+										if ( checkValue( pluginSlug, data.installed ) ) {
+											currentPlugin.attr( 'class', 'activate button button-primary' );
+											currentPlugin.html( sbi_installer_localize.activate_btn );
+										}
+									});
+								break;
+								case 'delete':
+									$('.plugin-card').remove();
+								break;
+								case 'activate':
+									$('#the-list-blueprint .plugin-card .action-links a.button').each(function( index ) {
+										var currentPlugin = $( this ),
+										pluginSlug        = currentPlugin.data( 'slug' );
+										if ( checkValue( pluginSlug, data.activate ) && currentPlugin.hasClass( 'activate') ) {
+											currentPlugin.attr( 'class', 'installed button disabled' );
+											currentPlugin.html( sbi_installer_localize.installed_btn );
+										}
+									});
+								break;
+								case 'deactivate':
+									$('#the-list-blueprint .plugin-card .action-links a.button').each(function( index ) {
+										var currentPlugin = $( this ),
+										pluginSlug        = currentPlugin.data( 'slug' );
+										if ( currentPlugin.hasClass( 'disabled') ) {
+											currentPlugin.attr( 'class', 'activate button button-primary' );
+											currentPlugin.html( sbi_installer_localize.activate_btn );
+										}
+									});
+								break;
+							default:
+								break;
 						}
 					},
 					error: function( xhr, status, error ) {
@@ -112,7 +142,6 @@ jQuery( document ).ready(
 							currentPlugin.removeClass( 'installing' );
 						}
 						isLoading = false;
-						console.log(pluginSlug);
 					},
 					error: function( xhr, status, error ) {
 						console.log( status );
@@ -150,7 +179,6 @@ jQuery( document ).ready(
 							}
 						}
 						isLoading = false;
-						console.log(pluginSlug);
 					},
 					error: function( xhr, status, error ) {
 						console.log( status );

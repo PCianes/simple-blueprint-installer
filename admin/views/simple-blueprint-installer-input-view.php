@@ -31,18 +31,10 @@
 <div class="sbi-button-actions sbi-danger-buttons" style="display: none;">
 	<a href="#" id="sbi-delete-button" class="button sbi-delete-button"><?php esc_html_e( '¡Delete all plugins!', 'simple-blueprint-installer' ); ?></a>
 	<a href="#" id="sbi-install-button" class="button"><?php esc_html_e( 'Install all plugins set here', 'simple-blueprint-installer' ); ?></a>
-	<form action="#" method="post">
-		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Activate all plugins set here', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce_activate" name="blueprint_register_nonce_activate" value="<?php echo wp_create_nonce('blueprint_generate_nonce_activate'); ?>" />
-		<input type="hidden" id="sbi-activate" name="sbi-activate" value="sbi-activate"/>
-	</form>
-	<form action="#" method="post">
-		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Deactivate all plugins installed', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce_deactivate" name="blueprint_register_nonce_deactivate" value="<?php echo wp_create_nonce('blueprint_generate_nonce_deactivate'); ?>" />
-		<input type="hidden" id="sbi-deactivate" name="sbi-deactivate" value="sbi-deactivate"/>
-	</form>
+	<a href="#" id="sbi-activate-button" class="button"><?php esc_html_e( 'Activate all plugins set here', 'simple-blueprint-installer' ); ?></a>
+	<a href="#" id="sbi-deactivate-button" class="button sbi-delete-button"><?php esc_html_e( '¡Deactivate all plugins!', 'simple-blueprint-installer' ); ?></a>
 </div>
 <div class="sbi-button-actions sbi-danger-buttons" style="display: none;">
-	<p class="install-help"><?php esc_html_e( 'Be careful when using these buttons. It depends on the number of plugins established and the behaviors they have when they install the behavior of these actions can be unpredictable, and even generate errors. Please make a backup befor use it.', 'simple-blueprint-installer' ); ?></p>
+	<p class="install-help"><?php esc_html_e( 'Be careful when using these buttons. It depends on the number of plugins established and the behaviors they have when they install the behavior of these actions can be unpredictable, and even generate errors. Please make a backup befor use it. It´s safer to go step by step.', 'simple-blueprint-installer' ); ?></p>
 </div>
 <div id="the-list-blueprint">

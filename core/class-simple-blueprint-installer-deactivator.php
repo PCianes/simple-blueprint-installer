@@ -31,7 +31,6 @@ class Simple_Blueprint_Installer_Deactivator {
 	public static function deactivate() {
 
 		delete_option( 'sbi_do_activation_redirect' );
-		delete_option( 'sbi_plugins_string' );
 		delete_option( 'sbi_plugins_blueprint' );
 
 	}
