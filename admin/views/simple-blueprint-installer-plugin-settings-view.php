@@ -60,11 +60,13 @@
 
 		<h2 class="title"><?php esc_html_e( 'Other Tasks', 'simple-blueprint-installer' ); ?></h2>
 		<table class="form-table">
+			<?php if ( $pings ) : ?>
 			<tr>
 				<td><label><input name="pings" type="checkbox" checked><?php esc_html_e( 'Disable pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' ); ?></label></td>
 			</tr>
+			<?php endif; ?>
 			<tr>
-				<td><label><input name="deactivate" type="checkbox" checked><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
+				<td><label><input name="deactivate" type="checkbox"><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
 			</tr>
 		</table>
 		<table class="form-table">

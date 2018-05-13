@@ -212,6 +212,12 @@ class Simple_Blueprint_Installer_Admin {
 			}
 		}
 
+		if ( 'open' === get_option( 'default_comment_status' ) || 'open' === get_option( 'default_ping_status' ) || '1' === get_option( 'default_pingback_flag' ) ) {
+			$pings = true;
+		} else {
+			$pings = false;
+		}
+
 		$available_tags = array('year','monthnum','day','hour','minute','second','post_id','postname','category','author');
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-settings-view.php';
 	}
@@ -238,20 +244,16 @@ class Simple_Blueprint_Installer_Admin {
 		if( 'on' == $_POST['files'] ){
 			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
 		}
+		if( 'on' == $_POST['pings'] ){
+			$this->disable_pings_trackbacks_comments();
+		}
 		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
-			d( $_POST['category']);
 		}
 		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
-			d( $_POST['permalink']);
-		}
-		if( 'on' == $_POST['pings'] ){
-			d('borrar pings');
 		}
 		if( 'on' == $_POST['deactivate'] ){
-			d('borrar deactivate');
+			$this->deactivate_this_plugin();
 		}
-		d($_POST);
-		wp_die();
 
 		wp_redirect( esc_url( $_POST['_wp_http_referer'] ) );
 		exit;
@@ -303,4 +305,43 @@ class Simple_Blueprint_Installer_Admin {
 		}
 
 	}
+
+	/**
+	 * Disable pings, trackbacks and comments on new articles
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function disable_pings_trackbacks_comments() {
+
+		if( 'open' === get_option( 'default_comment_status' ) ) {
+			update_option( 'default_comment_status', 'closed' );
+		}
+
+		if( 'open' === get_option( 'default_ping_status' ) ) {
+			update_option( 'default_ping_status', 'closed' );
+		}
+
+		if( '1' === get_option( 'default_pingback_flag' ) ) {
+			update_option( 'default_pingback_flag', '' );
+		}
+
+	}
+
+	/**
+	 * Deactivate this plugin
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function deactivate_this_plugin() {
+
+		if ( ! function_exists( 'deactivate_plugins' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		deactivate_plugins( 'simple-blueprint-installer/simple-blueprint-installer.php' );
+
+	}
+
 }
