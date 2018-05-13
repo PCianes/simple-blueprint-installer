@@ -176,6 +176,9 @@ class Simple_Blueprint_Installer {
 		$this->loader->add_action( 'install_plugins_sbi_blueprint', $plugin_admin, 'display_plugin_blueprint_tab' );
 		$this->loader->add_action( 'install_plugins_sbi_setup', $plugin_admin, 'display_plugin_settings_tab' );
 
+		$this->loader->add_action( 'admin_post_sbi_setup_form', $plugin_admin, 'control_form_settings_tab' );
+		//$this->loader->add_action( 'admin_post_nopriv_sbi_setup_form', $plugin_admin, 'control_form_settings_tab' );
+
 		$plugin_installer_control = new Simple_Blueprint_Installer_Control( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_ajax_sbi_plugins_operate', $plugin_installer_control, 'sbi_plugins_operate' );

@@ -30,3 +30,8 @@
 	 color: red;
  }
 
+ #sbi-permalink-list{
+	display: flex;
+    justify-content: flex-start;
+ }
+

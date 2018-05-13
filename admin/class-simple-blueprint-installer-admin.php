@@ -40,6 +40,15 @@ class Simple_Blueprint_Installer_Admin {
 	private $version;
 
 	/**
+	 * The WordPress unnecessary files to delete
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $files_to_delete    The path of WP unnecessary files to delete
+	 */
+	private $files_to_delete;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -50,6 +59,11 @@ class Simple_Blueprint_Installer_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
+
+		$this->files_to_delete = array(
+			'wp-config-sample.php'	=> trailingslashit( ABSPATH ) . 'wp-config-sample.php',
+			'readme.html'			=> trailingslashit( ABSPATH ) . 'readme.html',
+		);
 
 		$this->load_dependencies();
 	}
@@ -117,9 +131,9 @@ class Simple_Blueprint_Installer_Admin {
 			array(
 				'ajax_url'      => admin_url( 'admin-ajax.php' ),
 				'admin_nonce'   => wp_create_nonce( 'sbi_installer_nonce' ),
-				'install_btn'   => __( 'Install Now', 'simple-blueprint-installer' ),
-				'activate_btn'  => __( 'Activate', 'simple-blueprint-installer' ),
-				'installed_btn' => __( 'Activated', 'simple-blueprint-installer' ),
+				'install_btn'   => esc_html__( 'Install Now', 'simple-blueprint-installer' ),
+				'activate_btn'  => esc_html__( 'Activate', 'simple-blueprint-installer' ),
+				'installed_btn' => esc_html__( 'Activated', 'simple-blueprint-installer' ),
 			)
 		);
 
@@ -147,7 +161,7 @@ class Simple_Blueprint_Installer_Admin {
 	 * @param   array $tabs All tabs register in WordPress for plugin-install.php.
 	 */
 	public function add_custom_tabs( $tabs ) {
-		$tabs['sbi_blueprint'] = __( 'Blueprint', 'simple-blueprint-installer' );
+		$tabs['sbi_blueprint'] = esc_html__( 'Blueprint', 'simple-blueprint-installer' );
 		$tabs['sbi_setup']     = '<span class="dashicons dashicons-admin-generic"></span>';
 		return $tabs;
 	}
@@ -170,7 +184,123 @@ class Simple_Blueprint_Installer_Admin {
 	 * @access   public
 	 */
 	public function display_plugin_settings_tab() {
-		echo '<h2>SBI options</h2>';
+		$default_post = get_the_title( 1 );
+		$default_page = get_the_title( 2 );
+		$category_name = get_cat_name( 1 );
+		$permalink = get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : '/%postname%/';
+		$allow_html = array( 'code' => array() );
+
+		$themes = wp_get_themes();
+		$current_theme = get_template();
+		if ( 1 != count( $themes ) ) {
+			$themes_names = '';
+			foreach ( $themes as $theme_name => $theme_object ) {
+				if ( $theme_name == $current_theme ) { continue; }
+				$themes_names .= '<code>' . $theme_name . '</code> ';
+			}
+		} else {
+			$themes = false;
+		}
+
+		$files_to_delete = '';
+		$files_already_delete = '';
+		foreach ( $this->files_to_delete as $file_name => $file_url ) {
+			if ( file_exists( $file_url ) ) {
+				$files_to_delete .= '<code>' . $file_name . '</code> ';
+			} else {
+				$files_already_delete .= '<code>' . $file_name . '</code> ';
+			}
+		}
+
+		$available_tags = array('year','monthnum','day','hour','minute','second','post_id','postname','category','author');
+		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-settings-view.php';
 	}
 
+	/**
+	 * Controller of settings tab to execute marked actions into the form
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function control_form_settings_tab() {
+
+		check_admin_referer( 'sbi_setup_form', 'sbi_setup_nonce' );
+
+		if( 'on' == $_POST['hello'] ){
+			$this->delete_post_by_id( 1 );
+		}
+		if( 'on' == $_POST['sample'] ){
+			$this->delete_post_by_id( 2 );
+		}
+		if( 'on' == $_POST['themes'] ){
+			$this->delete_themes_except_given( get_template() );
+		}
+		if( 'on' == $_POST['files'] ){
+			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
+		}
+		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
+			d( $_POST['category']);
+		}
+		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
+			d( $_POST['permalink']);
+		}
+		if( 'on' == $_POST['pings'] ){
+			d('borrar pings');
+		}
+		if( 'on' == $_POST['deactivate'] ){
+			d('borrar deactivate');
+		}
+		d($_POST);
+		wp_die();
+
+		wp_redirect( esc_url( $_POST['_wp_http_referer'] ) );
+		exit;
+	}
+
+	/**
+	 * Remove a post/page by id and everything that is tied to it is deleted also.
+	 * This includes comments, post meta fields, and terms associated with the post.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   integer $post_id The id of the post to delete.
+	 */
+	private function delete_post_by_id( $post_id ) {
+
+		wp_delete_post( (int) $post_id , true );
+
+	}
+
+	/**
+	 * Delete all themes except for current theme
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $current_theme The name of the current theme to avoid delete.
+	 */
+	private function delete_themes_except_given( $current_theme ) {
+
+		foreach( wp_get_themes() as $theme_name => $theme_object ) {
+			if ( $theme_name == $current_theme ) { continue; }
+			delete_theme( $theme_name );
+		}
+
+	}
+
+	/**
+	 * Delete WordPress core unnecessary files
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   array $files_to_delete Array with the path of files to delete
+	 */
+	private function delete_wp_core_unnecessary_files( $files_to_delete ) {
+
+		foreach ( $files_to_delete as $file_url ) {
+			if ( file_exists( $file_url ) ) {
+				unlink( $file_url );
+			}
+		}
+
+	}
 }
