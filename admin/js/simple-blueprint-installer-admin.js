@@ -15,6 +15,22 @@ jQuery( document ).ready(
 
 		"use strict";
 
+		$('#sbi-permalink-list .button').click( function(){
+			var currentPermalink = $('#permalink'),
+					currentButton = $( this );
+
+			if ( '' === currentPermalink.val() ) {
+				currentPermalink.val( '/' );
+			}
+
+			if ( -1 !== currentPermalink.val().search( currentButton.html() ) ) {
+				currentPermalink.val( currentPermalink.val().replace( currentButton.html() + '/', '' ) );
+			} else {
+				currentPermalink.val( currentPermalink.val() + currentButton.html() + '/' );
+			}
+
+		});
+
 		var isLoading = false;
 
 		$('#sbi-danger-button').click( function(){

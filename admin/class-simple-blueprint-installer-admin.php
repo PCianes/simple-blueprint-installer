@@ -100,7 +100,7 @@ class Simple_Blueprint_Installer_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/simple-blueprint-installer-admin.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/simple-blueprint-installer-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -123,7 +123,7 @@ class Simple_Blueprint_Installer_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-blueprint-installer-admin.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-blueprint-installer-admin.js', array( 'jquery' ), $this->version, false );
 
 		wp_localize_script(
 			$this->plugin_name,
@@ -173,6 +173,10 @@ class Simple_Blueprint_Installer_Admin {
 	 * @access   public
 	 */
 	public function display_plugin_blueprint_tab() {
+
+		wp_enqueue_script( $this->plugin_name );
+		wp_enqueue_style( $this->plugin_name );
+
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 		Simple_Blueprint_Installer_Control::setup_blueprint();
 	}
@@ -184,6 +188,10 @@ class Simple_Blueprint_Installer_Admin {
 	 * @access   public
 	 */
 	public function display_plugin_settings_tab() {
+
+		wp_enqueue_script( $this->plugin_name );
+		wp_enqueue_style( $this->plugin_name );
+
 		$default_post = get_the_title( 1 );
 		$default_page = get_the_title( 2 );
 		$category_name = get_cat_name( 1 );
@@ -248,8 +256,10 @@ class Simple_Blueprint_Installer_Admin {
 			$this->disable_pings_trackbacks_comments();
 		}
 		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
+			$this->set_default_category_name( $_POST['category'] );
 		}
 		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
+			$this->set_custom_permalink( $_POST['permalink'] );
 		}
 		if( 'on' == $_POST['deactivate'] ){
 			$this->deactivate_this_plugin();
@@ -344,4 +354,40 @@ class Simple_Blueprint_Installer_Admin {
 
 	}
 
+	/**
+	 * Set default category name
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $new_category_name String with the new name of the general category of posts
+	 */
+	private function set_default_category_name( $new_category_name ) {
+
+		$new_category_name = sanitize_text_field( $new_category_name );
+
+		wp_update_term(
+			1,
+			'category',
+			array(
+			  'name' => $new_category_name,
+			  'slug' => str_replace( ' ', '-', strtolower( $new_category_name ) ),
+		  	)
+		);
+	}
+
+	/**
+	 * Set new custom permalink
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $new_custom_permalink String with the new custom permalink to set
+	 */
+	private function set_custom_permalink( $new_custom_permalink ) {
+
+		global $wp_rewrite;
+		$new_custom_permalink = sanitize_option( 'permalink_structure', $new_custom_permalink );
+		$wp_rewrite->set_permalink_structure( $new_custom_permalink );
+		flush_rewrite_rules();
+
+	}
 }
