@@ -20,7 +20,7 @@
 		<table class="form-table">
 			<?php if (  ! empty( $default_post ) ) : ?>
 			<tr>
-				<td><label><input name="hello" type="checkbox" checked><code><?php echo esc_html( $default_post ); ?></code></label></td>
+				<td><label><input name="hello" type="checkbox" checked /><code><?php echo esc_html( $default_post ); ?></code></label></td>
 			</tr>
 			<?php
 				else :
@@ -30,7 +30,7 @@
 			?>
 			<?php if ( ! empty( $default_page ) ) : ?>
 			<tr>
-				<td><label><input name="sample" type="checkbox" checked><code><?php echo esc_html( $default_page ); ?></code></label></td>
+				<td><label><input name="sample" type="checkbox" checked /><code><?php echo esc_html( $default_page ); ?></code></label></td>
 			</tr>
 			<?php
 				else :
@@ -40,7 +40,7 @@
 			?>
 			<?php if ( $themes ) : ?>
 			<tr>
-				<td><label><input name="themes" type="checkbox" checked><?php esc_html_e( '- All themes to delete:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $themes_names, $allow_html ); ?></label></td>
+				<td><label><input name="themes" type="checkbox" checked /><?php esc_html_e( '- All themes to delete:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $themes_names, $allow_html ); ?></label></td>
 			</tr>
 			<?php
 				else :
@@ -50,7 +50,7 @@
 			?>
 			<?php if ( '' != $files_to_delete ) : ?>
 			<tr>
-				<td><label><input name="files" type="checkbox" checked><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allow_html ); ?></label></td>
+				<td><label><input name="files" type="checkbox" checked /><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allow_html ); ?></label></td>
 			</tr>
 			<?php endif; ?>
 			<?php if ( '' != $files_already_delete ) :
@@ -62,9 +62,12 @@
 		<table class="form-table">
 			<?php if ( $pings ) : ?>
 			<tr>
-				<td><label><input name="pings" type="checkbox" checked><?php esc_html_e( 'Disable pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' ); ?></label></td>
+				<td><label><input name="pings" type="checkbox" checked /><?php esc_html_e( 'Disable pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' ); ?></label></td>
 			</tr>
 			<?php endif; ?>
+			<tr>
+				<td><label><input name="media" type="checkbox" value="1" <?php checked( '1', get_option( 'uploads_use_yearmonth_folders' ) ); ?> /><?php esc_html_e( 'Organize my uploads into month- and year-based folders.', 'simple-blueprint-installer' ); ?></label></td>
+			</tr>
 			<tr>
 				<td><label><input name="deactivate" type="checkbox"><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
 			</tr>
@@ -75,7 +78,16 @@
 				<td><input type="text" id="category" name="category" value="<?php echo esc_html( $category_name ); ?>" class="regular-text code"></td>
 			</tr>
 			<tr>
-				<th><label for="tag_base"><code><?php echo get_site_url(); ?></code></label></th>
+				<th><label for="category_base"><?php esc_html_e( 'Category base', 'simple-blueprint-installer' ); ?></label></th>
+				<td><input type="text" id="category_base" name="category_base" value="<?php echo esc_html( $category_base ); ?>" class="regular-text code"></td>
+			</tr>
+			<tr>
+				<th><label for="tag_base"><?php esc_html_e( 'Tag base', 'simple-blueprint-installer' ); ?></label></th>
+				<td>
+				<input type="text" id="tag_base" name="tag_base" value="<?php echo esc_html( $tag_base ); ?>" class="regular-text code">
+			</tr>
+			<tr>
+				<th><label for="permalink"><code><?php echo get_site_url(); ?></code></label></th>
 				<td>
 				<input type="text" id="permalink" name="permalink" value="<?php echo esc_html( $permalink ); ?>" class="regular-text code">
 			</tr>
@@ -90,3 +102,4 @@
 		<?php submit_button( esc_html__( 'Do these actions', 'simple-blueprint-installer' ) ); ?>
 	</form>
 </div>
+

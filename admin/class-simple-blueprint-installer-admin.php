@@ -226,6 +226,9 @@ class Simple_Blueprint_Installer_Admin {
 			$pings = false;
 		}
 
+		$category_base       = get_option( 'category_base' );
+		$tag_base            = get_option( 'tag_base' );
+
 		$available_tags = array('year','monthnum','day','hour','minute','second','post_id','postname','category','author');
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-settings-view.php';
 	}
@@ -258,9 +261,19 @@ class Simple_Blueprint_Installer_Admin {
 		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
 			$this->set_default_category_name( $_POST['category'] );
 		}
+		if( isset( $_POST['category_base'] ) && '' != $_POST['category_base'] ){
+			$this->set_category_base( $_POST['category_base'] );
+		}
+		if( isset( $_POST['tag_base'] ) && '' != $_POST['tag_base'] ){
+			$this->set_tag_base( $_POST['tag_base'] );
+		}
 		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
 			$this->set_custom_permalink( $_POST['permalink'] );
 		}
+
+		$this->update_media_options( $_POST['media'] );
+		flush_rewrite_rules();
+
 		if( 'on' == $_POST['deactivate'] ){
 			$this->deactivate_this_plugin();
 		}
@@ -339,6 +352,23 @@ class Simple_Blueprint_Installer_Admin {
 	}
 
 	/**
+	 * Update media options
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param	 string $option The selection to update media options
+	 */
+	private function update_media_options( $option ) {
+
+		if ( isset( $option ) ) {
+			update_option( 'uploads_use_yearmonth_folders', '1' );
+		} else {
+			update_option( 'uploads_use_yearmonth_folders', '' );
+		}
+
+	}
+
+	/**
 	 * Deactivate this plugin
 	 *
 	 * @since    1.0.0
@@ -376,6 +406,30 @@ class Simple_Blueprint_Installer_Admin {
 	}
 
 	/**
+	 * Set default base category of urls
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $new_category_base String with the new name of the base category
+	 */
+	private function set_category_base( $new_category_base ) {
+		global $wp_rewrite;
+		$wp_rewrite->set_category_base( '/' . sanitize_text_field( $new_category_base ) );
+	}
+
+	/**
+	 * Set default base tag of urls
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $new_category_base String with the new name of the base tag
+	 */
+	private function set_tag_base( $new_tag_base ) {
+		global $wp_rewrite;
+		$wp_rewrite->set_tag_base( '/' . sanitize_text_field( $new_tag_base ) );
+	}
+
+	/**
 	 * Set new custom permalink
 	 *
 	 * @since    1.0.0
@@ -383,11 +437,7 @@ class Simple_Blueprint_Installer_Admin {
 	 * @param   string $new_custom_permalink String with the new custom permalink to set
 	 */
 	private function set_custom_permalink( $new_custom_permalink ) {
-
 		global $wp_rewrite;
-		$new_custom_permalink = sanitize_option( 'permalink_structure', $new_custom_permalink );
-		$wp_rewrite->set_permalink_structure( $new_custom_permalink );
-		flush_rewrite_rules();
-
+		$wp_rewrite->set_permalink_structure( sanitize_option( 'permalink_structure', $new_custom_permalink ) );
 	}
 }
