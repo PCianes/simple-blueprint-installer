@@ -35,3 +35,11 @@
     justify-content: flex-start;
  }
 
+ .sbi-danger {
+	 color: red;
+ }
+
+ .date-time-text {
+    display: inline-block;
+    min-width: 10em;
+}

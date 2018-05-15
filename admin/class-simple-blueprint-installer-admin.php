@@ -230,6 +230,32 @@ class Simple_Blueprint_Installer_Admin {
 		$tag_base            = get_option( 'tag_base' );
 
 		$available_tags = array('year','monthnum','day','hour','minute','second','post_id','postname','category','author');
+
+		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
+		$languages = get_available_languages();
+		$translations = wp_get_available_translations();
+		$locale = get_locale();
+		if ( ! in_array( $locale, $languages ) ) {
+			$locale = '';
+		}
+
+		$current_offset = get_option('gmt_offset');
+		$tzstring = get_option('timezone_string');
+		// Remove old Etc mappings. Fallback to gmt_offset.
+		if ( false !== strpos( $tzstring,'Etc/GMT' ) )
+			$tzstring = '';
+		if ( empty( $tzstring ) ) { // Create a UTC+- zone if no timezone string exists
+			if ( 0 == $current_offset )
+				$tzstring = 'UTC+0';
+			elseif ( $current_offset < 0 )
+				$tzstring = 'UTC' . $current_offset;
+			else
+				$tzstring = 'UTC+' . $current_offset;
+		}
+
+		$date_formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y' ), 'Y-m-d', 'm/d/Y', 'd/m/Y' ) ) );
+		$time_formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a' ), 'g:i A', 'H:i' ) ) );
+
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-settings-view.php';
 	}
 
@@ -261,17 +287,14 @@ class Simple_Blueprint_Installer_Admin {
 		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
 			$this->set_default_category_name( $_POST['category'] );
 		}
-		if( isset( $_POST['category_base'] ) && '' != $_POST['category_base'] ){
-			$this->set_category_base( $_POST['category_base'] );
-		}
-		if( isset( $_POST['tag_base'] ) && '' != $_POST['tag_base'] ){
-			$this->set_tag_base( $_POST['tag_base'] );
-		}
 		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
 			$this->set_custom_permalink( $_POST['permalink'] );
 		}
 
+		$this->set_category_base( $_POST['category_base'] );
+		$this->set_tag_base( $_POST['tag_base'] );
 		$this->update_media_options( $_POST['media'] );
+		$this->update_indexing_options( $_POST['indexing'] );
 		flush_rewrite_rules();
 
 		if( 'on' == $_POST['deactivate'] ){
@@ -364,6 +387,22 @@ class Simple_Blueprint_Installer_Admin {
 			update_option( 'uploads_use_yearmonth_folders', '1' );
 		} else {
 			update_option( 'uploads_use_yearmonth_folders', '' );
+		}
+
+	}
+
+	/**
+	 * Update indexing options
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param	 string $option The selection to update indexing options
+	 */
+	private function update_indexing_options( $option ) {
+		if ( isset( $option ) && '0' === $option ) {
+			update_option( 'blog_public', '0' );
+		} else {
+			update_option( 'blog_public', '1' );
 		}
 
 	}

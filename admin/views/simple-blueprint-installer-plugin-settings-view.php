@@ -16,7 +16,7 @@
 	<h1><?php esc_html_e( 'Quick global settings', 'simple-blueprint-installer' ); ?></h1>
 	<form id= "sbi_setup_form" class="sbi_setup_form" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post">
 		<h2 class="title"><?php esc_html_e( 'Cleaning Tasks', 'simple-blueprint-installer' ); ?></h2>
-		<p><?php esc_html_e( 'All checked items will be permanently deleted.', 'simple-blueprint-installer' ); ?></p>
+		<p class="sbi-danger"><?php esc_html_e( 'All checked items will be permanently deleted.', 'simple-blueprint-installer' ); ?></p>
 		<table class="form-table">
 			<?php if (  ! empty( $default_post ) ) : ?>
 			<tr>
@@ -60,19 +60,65 @@
 
 		<h2 class="title"><?php esc_html_e( 'Other Tasks', 'simple-blueprint-installer' ); ?></h2>
 		<table class="form-table">
-			<?php if ( $pings ) : ?>
+			<?php if ( ! empty( $languages ) || ! empty( $translations ) ) : ?>
 			<tr>
-				<td><label><input name="pings" type="checkbox" checked /><?php esc_html_e( 'Disable pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' ); ?></label></td>
+				<th scope="row"><label for="WPLANG"><?php esc_html_e( 'Site Language', 'simple-blueprint-installer' ); ?></label></th>
+				<td>
+				<?php wp_dropdown_languages( array(
+						'name'         => 'WPLANG',
+						'id'           => 'WPLANG',
+						'selected'     => $locale,
+						'languages'    => $languages,
+						'translations' => $translations,
+						'show_available_translations' => current_user_can( 'install_languages' ) && wp_can_install_language_pack(),
+					) ); ?>
+				</td>
 			</tr>
 			<?php endif; ?>
 			<tr>
-				<td><label><input name="media" type="checkbox" value="1" <?php checked( '1', get_option( 'uploads_use_yearmonth_folders' ) ); ?> /><?php esc_html_e( 'Organize my uploads into month- and year-based folders.', 'simple-blueprint-installer' ); ?></label></td>
+				<th scope="row"><label for="timezone_string"><?php esc_html_e( 'Timezone', 'simple-blueprint-installer' ); ?></label></th>
+				<td>
+					<select id="timezone_string" name="timezone_string" aria-describedby="timezone-description">
+						<?php echo wp_timezone_choice( $tzstring, get_user_locale() ); ?>
+					</select>
+				</td>
 			</tr>
 			<tr>
-				<td><label><input name="deactivate" type="checkbox"><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
+				<th scope="row"><?php esc_html_e( 'Date Format', 'simple-blueprint-installer' ); ?></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text"><span><?php esc_html_e( 'Date Format', 'simple-blueprint-installer' ); ?></span></legend>
+						<?php
+						foreach ( $date_formats as $format ) {
+							echo "\t<label><input type='radio' name='date_format' value='" . esc_attr( $format ) . "'";
+							if ( get_option('date_format') === $format ) { // checked() uses "==" rather than "==="
+								echo " checked='checked'";
+								$custom = false;
+							}
+							echo ' /> <span class="date-time-text format-i18n">' . date_i18n( $format ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
+						}
+						?>
+					</fieldset>
+				</td>
 			</tr>
-		</table>
-		<table class="form-table">
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Time Format', 'simple-blueprint-installer' ); ?></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text"><span><?php esc_html_e( 'Time Format', 'simple-blueprint-installer' ); ?></span></legend>
+						<?php
+						foreach ( $time_formats as $format ) {
+							echo "\t<label><input type='radio' name='time_format' value='" . esc_attr( $format ) . "'";
+							if ( get_option('time_format') === $format ) { // checked() uses "==" rather than "==="
+								echo " checked='checked'";
+								$custom = false;
+							}
+							echo ' /> <span class="date-time-text format-i18n">' . date_i18n( $format ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
+						}
+						?>
+					</fieldset>
+				</td>
+			</tr>
 			<tr>
 				<th><label for="category"><?php esc_html_e( 'Default post category', 'simple-blueprint-installer' ); ?></label></th>
 				<td><input type="text" id="category" name="category" value="<?php echo esc_html( $category_name ); ?>" class="regular-text code"></td>
@@ -97,6 +143,27 @@
 				<li><button type="button" class="button button-secondary"><?php echo '%' . $tag . '%'; ?></button></li>
 			<?php endforeach; ?>
 		</ul>
+		<table class="form-table">
+			<?php if ( $pings ) : ?>
+			<tr>
+				<td><label><input name="pings" type="checkbox" checked /><?php esc_html_e( 'Disable pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' ); ?></label></td>
+			</tr>
+			<?php
+				else :
+				esc_html_e( '- Already disabled pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' );
+				endif;
+			?>
+			<tr>
+				<td><label><input name="media" type="checkbox" value="1" <?php checked( '1', get_option( 'uploads_use_yearmonth_folders' ) ); ?> /><?php esc_html_e( 'Organize my uploads into month- and year-based folders.', 'simple-blueprint-installer' ); ?></label></td>
+			</tr>
+			<tr>
+				<td><label class="sbi-danger"><input name="indexing" type="checkbox" value="0" <?php checked( '0', get_option( 'blog_public' ) ); ?> /><?php esc_html_e( 'Discourage search engines from indexing this site.', 'simple-blueprint-installer' ); ?></label></td>
+			</tr>
+			<tr>
+				<td><label class="sbi-danger"><input name="deactivate" type="checkbox"><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
+			</tr>
+		</table>
+		<p class="sbi-danger"><a href="plugin-install.php?tab=sbi_blueprint"><?php esc_html_e( 'Wait a minute! Have you already installed all the plugins in this WordPress?', 'simple-blueprint-installer' ); ?></a></p>
 		<input type="hidden" name="action" value="sbi_setup_form">
 		<?php wp_nonce_field( 'sbi_setup_form', 'sbi_setup_nonce' ); ?>
 		<?php submit_button( esc_html__( 'Do these actions', 'simple-blueprint-installer' ) ); ?>

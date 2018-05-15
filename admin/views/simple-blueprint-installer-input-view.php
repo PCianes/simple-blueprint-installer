@@ -19,6 +19,7 @@
 		<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Set plugins', 'simple-blueprint-installer' ); ?>">
 		<input type="hidden" id="blueprint_register_nonce" name="blueprint_register_nonce" value="<?php echo wp_create_nonce('blueprint_generate_nonce'); ?>" />
 	</form>
+	<p class="sbi-danger"><a href="plugin-install.php?tab=sbi_setup"><?php esc_html_e( 'Have you already cleaned and configured this WordPress?', 'simple-blueprint-installer' ); ?></a></p>
 </div>
 <div class="sbi-button-actions">
 	<form action="#" method="post">
