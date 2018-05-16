@@ -18,11 +18,11 @@
 			<h3><?php echo esc_html( $api->name ); ?><img class="plugin-icon" src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $api->slug ); ?>"></h3>
 		</div>
 		<div class="action-links">
-			<ul class="plugin-action-buttons"><li><a class="install-now button <?php echo $button_classes; ?>" data-slug="<?php echo $api->slug; ?>" data-name="<?php echo $api->name; ?>" href="<?php echo get_admin_url(); ?>/update.php?action=install-plugin&amp;plugin=<?php echo $api->slug; ?>&amp;_wpnonce=<?php echo wp_create_nonce( 'install-plugin_' . $api->slug ); ?>"><?php echo $button_text; ?></a></li><li><a href="https://wordpress.org/plugins/<?php echo $api->slug; ?>/" target="_blank"><?php _e( 'More Details', 'simple-blueprint-installer' ); ?></a></li></ul>
+			<ul class="plugin-action-buttons"><li><a class="install-now button <?php echo esc_attr( $button_classes ); ?>" data-slug="<?php echo esc_attr( $api->slug ); ?>" data-name="<?php echo esc_attr( $api->name ); ?>" href="<?php echo esc_url( get_admin_url() ); ?>/update.php?action=install-plugin&amp;plugin=<?php echo esc_html( $api->slug ); ?>&amp;_wpnonce=<?php echo esc_attr( wp_create_nonce( 'install-plugin_' . $api->slug ) ); ?>"><?php echo esc_html( $button_text ); ?></a></li><li><a href="https://wordpress.org/plugins/<?php echo esc_html( $api->slug ); ?>/" target="_blank"><?php esc_html_e( 'More Details', 'simple-blueprint-installer' ); ?></a></li></ul>
 		</div>
 		<div class="desc column-description">
 			<p><?php echo esc_html( $api->short_description ); ?></p>
-			<p class="authors"><cite><?php esc_html_e( 'By', 'simple-blueprint-installer' ); ?> <?php echo $api->author; ?></cite></p>
+			<p class="authors"><cite><?php esc_html_e( 'By', 'simple-blueprint-installer' ); ?> <?php echo esc_html( $api->author ); ?></cite></p>
 		</div>
 	</div>
 </div>

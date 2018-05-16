@@ -14,18 +14,18 @@
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Quick global settings', 'simple-blueprint-installer' ); ?></h1>
-	<form id= "sbi_setup_form" class="sbi_setup_form" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post">
+	<form id= "sbi_setup_form" class="sbi_setup_form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 		<h2 class="title"><?php esc_html_e( 'Cleaning Tasks', 'simple-blueprint-installer' ); ?></h2>
 		<p class="sbi-danger"><?php esc_html_e( 'All checked items will be permanently deleted.', 'simple-blueprint-installer' ); ?></p>
 		<table class="form-table">
-			<?php if (  ! empty( $default_post ) ) : ?>
+			<?php if ( ! empty( $default_post ) ) : ?>
 			<tr>
 				<td><label><input name="hello" type="checkbox" checked /><code><?php echo esc_html( $default_post ); ?></code></label></td>
 			</tr>
 			<?php
 				else :
-				esc_html_e( '- Post with id=1 already deleted.', 'simple-blueprint-installer' );
-				echo '<br>';
+					esc_html_e( '- Post with id=1 already deleted.', 'simple-blueprint-installer' );
+					echo '<br>';
 				endif;
 			?>
 			<?php if ( ! empty( $default_page ) ) : ?>
@@ -34,8 +34,8 @@
 			</tr>
 			<?php
 				else :
-				esc_html_e( '- Page with id=2 already deleted.', 'simple-blueprint-installer' );
-				echo '<br>';
+					esc_html_e( '- Page with id=2 already deleted.', 'simple-blueprint-installer' );
+					echo '<br>';
 				endif;
 			?>
 			<?php if ( $themes ) : ?>
@@ -44,8 +44,8 @@
 			</tr>
 			<?php
 				else :
-				esc_html_e( '- All themes already deleted. Only current theme available: ', 'simple-blueprint-installer' );
-				echo '<code>' . $current_theme . '</code><br>';
+					esc_html_e( '- All themes already deleted. Only current theme available: ', 'simple-blueprint-installer' );
+					echo '<code>' . esc_html( $current_theme ) . '</code><br>';
 				endif;
 			?>
 			<?php if ( '' != $files_to_delete ) : ?>
@@ -53,9 +53,12 @@
 				<td><label><input name="files" type="checkbox" checked /><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allow_html ); ?></label></td>
 			</tr>
 			<?php endif; ?>
-			<?php if ( '' != $files_already_delete ) :
-				esc_html_e( '- WordPress unnecessary core files already deleted: ', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_already_delete, $allow_html );
-				endif; ?>
+			<?php
+			if ( '' != $files_already_delete ) :
+				esc_html_e( '- WordPress unnecessary core files already deleted: ', 'simple-blueprint-installer' );
+				echo wp_kses( $files_already_delete, $allow_html );
+				endif;
+				?>
 		</table>
 
 		<h2 class="title"><?php esc_html_e( 'Other Tasks', 'simple-blueprint-installer' ); ?></h2>
@@ -64,14 +67,18 @@
 			<tr>
 				<th scope="row"><label for="WPLANG"><?php esc_html_e( 'Site Language', 'simple-blueprint-installer' ); ?></label></th>
 				<td>
-				<?php wp_dropdown_languages( array(
-						'name'         => 'WPLANG',
-						'id'           => 'WPLANG',
-						'selected'     => $locale,
-						'languages'    => $languages,
-						'translations' => $translations,
+				<?php
+				wp_dropdown_languages(
+					array(
+						'name'                        => 'WPLANG',
+						'id'                          => 'WPLANG',
+						'selected'                    => $locale,
+						'languages'                   => $languages,
+						'translations'                => $translations,
 						'show_available_translations' => current_user_can( 'install_languages' ) && wp_can_install_language_pack(),
-					) ); ?>
+					)
+				);
+					?>
 				</td>
 			</tr>
 			<?php endif; ?>
@@ -150,7 +157,7 @@
 			</tr>
 			<?php
 				else :
-				esc_html_e( '- Already disabled pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' );
+					esc_html_e( '- Already disabled pings, trackbacks and comments on new articles.', 'simple-blueprint-installer' );
 				endif;
 			?>
 			<tr>

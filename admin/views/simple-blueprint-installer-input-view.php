@@ -17,14 +17,14 @@
 	<form action="#" method="post">
 		<textarea rows="2" type="search" id="blueprint_plugins" name="blueprint_plugins"><?php echo esc_html( $plugins_string ); ?></textarea>
 		<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Set plugins', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce" name="blueprint_register_nonce" value="<?php echo wp_create_nonce('blueprint_generate_nonce'); ?>" />
+		<input type="hidden" id="blueprint_register_nonce" name="blueprint_register_nonce" value="<?php echo esc_attr( wp_create_nonce( 'blueprint_generate_nonce' ) ); ?>" />
 	</form>
 	<p class="sbi-danger"><a href="plugin-install.php?tab=sbi_setup"><?php esc_html_e( 'Have you already cleaned and configured this WordPress?', 'simple-blueprint-installer' ); ?></a></p>
 </div>
 <div class="sbi-button-actions">
 	<form action="#" method="post">
 		<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Reset & Update', 'simple-blueprint-installer' ); ?>">
-		<input type="hidden" id="blueprint_register_nonce_update" name="blueprint_register_nonce_update" value="<?php echo wp_create_nonce('blueprint_generate_nonce_update'); ?>" />
+		<input type="hidden" id="blueprint_register_nonce_update" name="blueprint_register_nonce_update" value="<?php echo esc_attr( wp_create_nonce( 'blueprint_generate_nonce_update' ) ); ?>" />
 		<input type="hidden" id="sbi-update" name="sbi-update" value="sbi-update"/>
 	</form>
 	<a href="#" id="sbi-danger-button" class="button button-primary"><?php esc_html_e( 'Show & hide \'danger\' buttons', 'simple-blueprint-installer' ); ?></a>

@@ -76,7 +76,7 @@ class Simple_Blueprint_Installer {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_public_hooks();
+		//$this->define_public_hooks();
 
 	}
 
@@ -119,15 +119,15 @@ class Simple_Blueprint_Installer {
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-simple-blueprint-installer-public.php';
+		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-simple-blueprint-installer-public.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site and also into admin area, like libraries and helpers
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-blueprint-installer-includes.php';
+		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-blueprint-installer-includes.php';
 
-		$includes = new Simple_Blueprint_Installer_Includes( $this->get_plugin_name(), $this->get_version() );
+		//$includes = new Simple_Blueprint_Installer_Includes( $this->get_plugin_name(), $this->get_version() );
 
 		/**
 		 * Get loader using its singleton
@@ -175,9 +175,7 @@ class Simple_Blueprint_Installer {
 		$this->loader->add_filter( 'install_plugins_tabs', $plugin_admin, 'add_custom_tabs' );
 		$this->loader->add_action( 'install_plugins_sbi_blueprint', $plugin_admin, 'display_plugin_blueprint_tab' );
 		$this->loader->add_action( 'install_plugins_sbi_setup', $plugin_admin, 'display_plugin_settings_tab' );
-
 		$this->loader->add_action( 'admin_post_sbi_setup_form', $plugin_admin, 'control_form_settings_tab' );
-		//$this->loader->add_action( 'admin_post_nopriv_sbi_setup_form', $plugin_admin, 'control_form_settings_tab' );
 
 		$plugin_installer_control = new Simple_Blueprint_Installer_Control( $this->get_plugin_name(), $this->get_version() );
 

@@ -6,7 +6,7 @@
  #the-list-blueprint {
 	margin-top: 25px;
 	display: flex;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
  }
 
  #blueprint_plugins {
@@ -32,7 +32,7 @@
 
  #sbi-permalink-list{
 	display: flex;
-    justify-content: flex-start;
+	justify-content: flex-start;
  }
 
  .sbi-danger {
@@ -40,6 +40,6 @@
  }
 
  .date-time-text {
-    display: inline-block;
-    min-width: 10em;
+	display: inline-block;
+	min-width: 10em;
 }

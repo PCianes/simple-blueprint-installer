@@ -68,42 +68,42 @@ class Simple_Blueprint_Installer_Control {
 			$make = sanitize_text_field( wp_unslash( $_POST['make'] ) );
 		}
 
-		if ( 'delete' == $make ) {
+		if ( 'delete' === $make ) {
 			self::delete_all_plugins_installed( true );
 			$response = array(
-				'status' 		=> esc_html__( 'success', 'simple-blueprint-installer' ),
-				'msg'			=> esc_html__( 'delete all', 'simple-blueprint-installer' ),
+				'status' => esc_html__( 'success', 'simple-blueprint-installer' ),
+				'msg'    => esc_html__( 'delete all', 'simple-blueprint-installer' ),
 			);
 		}
 
-		if ( 'activate' == $make ) {
+		if ( 'activate' === $make ) {
 			$all_plugins_installed_by_array = self::comma_separated_to_array( self::get_all_plugins_installed_by_slug() );
-			$plugins_string = get_option( 'sbi_plugins_blueprint' );
-			$plugins_array = self::comma_separated_to_array( $plugins_string );
-			$plugins_activate = array();
-			$plugins_not_activate = array();
+			$plugins_string                 = get_option( 'sbi_plugins_blueprint' );
+			$plugins_array                  = self::comma_separated_to_array( $plugins_string );
+			$plugins_activate               = array();
+			$plugins_not_activate           = array();
 			foreach ( $plugins_array as $plugin_slug ) {
 				if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
 					$response = self::activate_plugin( $plugin_slug );
 				}
-				if ( 'success' == $response['status'] ) {
+				if ( 'success' === $response['status'] ) {
 					$plugins_activate[] = $plugin_slug;
 				} else {
 					$plugins_not_activate[] = $plugin_slug;
 				}
 			}
 			$response = array(
-				'status' 		=> esc_html__( 'success', 'simple-blueprint-installer' ),
-				'activate'		=> $plugins_activate,
-				'not_activate' 	=> $plugins_not_activate,
+				'status'       => esc_html__( 'success', 'simple-blueprint-installer' ),
+				'activate'     => $plugins_activate,
+				'not_activate' => $plugins_not_activate,
 			);
 		}
 
-		if ( 'deactivate' == $make ) {
+		if ( 'deactivate' === $make ) {
 			self::delete_all_plugins_installed();
 			$response = array(
-				'status' 		=> esc_html__( 'success', 'simple-blueprint-installer' ),
-				'msg'			=> esc_html__( 'deactivate all', 'simple-blueprint-installer' ),
+				'status' => esc_html__( 'success', 'simple-blueprint-installer' ),
+				'msg'    => esc_html__( 'deactivate all', 'simple-blueprint-installer' ),
 			);
 		}
 
@@ -125,11 +125,11 @@ class Simple_Blueprint_Installer_Control {
 			wp_die( esc_html__( 'Error - unable to verify nonce, please try again.', 'simple-blueprint-installer' ) );
 		}
 
-		$plugins_string = get_option( 'sbi_plugins_blueprint' );
-		$plugins_array = self::comma_separated_to_array( $plugins_string );
+		$plugins_string                 = get_option( 'sbi_plugins_blueprint' );
+		$plugins_array                  = self::comma_separated_to_array( $plugins_string );
 		$all_plugins_installed_by_array = self::comma_separated_to_array( self::get_all_plugins_installed_by_slug() );
-		$plugins_installed = array();
-		$plugins_not_installed = array();
+		$plugins_installed              = array();
+		$plugins_not_installed          = array();
 
 		foreach ( $plugins_array as $plugin_slug ) {
 			if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
@@ -137,7 +137,7 @@ class Simple_Blueprint_Installer_Control {
 			}
 			$response = self::install_plugin( $plugin_slug );
 
-			if ( 'success' == $response['status'] ) {
+			if ( 'success' === $response['status'] ) {
 				$plugins_installed[] = $plugin_slug;
 			} else {
 				$plugins_not_installed[] = $plugin_slug;
@@ -145,8 +145,8 @@ class Simple_Blueprint_Installer_Control {
 		}
 
 		$response = array(
-			'status' 		=> esc_html__( 'success', 'simple-blueprint-installer' ),
-			'installed'		=> $plugins_installed,
+			'status'        => esc_html__( 'success', 'simple-blueprint-installer' ),
+			'installed'     => $plugins_installed,
 			'not_installed' => $plugins_not_installed,
 		);
 
@@ -180,7 +180,7 @@ class Simple_Blueprint_Installer_Control {
 	 * Install a plugin by slug
 	 *
 	 * @since    1.0.0
-	 * @param   string $plugin_slug Slug of the plugins to install
+	 * @param   string $plugin_slug Slug of the plugins to install.
 	 */
 	public static function install_plugin( $plugin_slug ) {
 
@@ -257,7 +257,7 @@ class Simple_Blueprint_Installer_Control {
 	 * Activate a plugin by slug
 	 *
 	 * @since    1.0.0
-	 * @param   string $plugin_slug Slug of the plugins to activate
+	 * @param   string $plugin_slug Slug of the plugins to activate.
 	 */
 	public static function activate_plugin( $plugin_slug ) {
 
@@ -317,11 +317,11 @@ class Simple_Blueprint_Installer_Control {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$all_plugins = get_plugins();
+		$all_plugins                   = get_plugins();
 		$all_plugins_installed_by_slug = '';
 
 		foreach ( $all_plugins as $path => $data ) {
-			if ( 'simple-blueprint-installer' == $data['TextDomain'] ) {
+			if ( 'simple-blueprint-installer' === $data['TextDomain'] ) {
 				continue;
 			}
 			$all_plugins_installed_by_slug .= $data['TextDomain'];
@@ -335,6 +335,7 @@ class Simple_Blueprint_Installer_Control {
 	 * Delete all others plugins installed
 	 *
 	 * @since    1.0.0
+	 * @param boolean $delete_plugins True/false to delete or not delete all plugins.
 	 */
 	private static function delete_all_plugins_installed( $delete_plugins = false ) {
 
@@ -342,11 +343,11 @@ class Simple_Blueprint_Installer_Control {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$all_plugins = get_plugins();
+		$all_plugins           = get_plugins();
 		$all_plugins_installed = array();
 
 		foreach ( $all_plugins as $path => $data ) {
-			if ( 'simple-blueprint-installer' == $data['TextDomain'] ) {
+			if ( 'simple-blueprint-installer' === $data['TextDomain'] ) {
 				continue;
 			}
 			$all_plugins_installed[] = $path;
@@ -372,7 +373,7 @@ class Simple_Blueprint_Installer_Control {
 		$plugins_string = get_option( 'sbi_plugins_blueprint' );
 
 		if ( isset( $_POST['blueprint_register_nonce'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce'], 'blueprint_generate_nonce' ) ) {
-			$plugins_string = sanitize_text_field( $_POST[ 'blueprint_plugins' ] );
+			$plugins_string = sanitize_text_field( $_POST['blueprint_plugins'] );
 			update_option( 'sbi_plugins_blueprint', $plugins_string, true );
 		}
 
@@ -389,7 +390,7 @@ class Simple_Blueprint_Installer_Control {
 	 * Init the display of the plugins.
 	 *
 	 * @since    1.0.0
-	 * @param   string $plugins_string Slugs of the plugins to display
+	 * @param   string $plugins_string Slugs of the plugins to display.
 	 */
 	public static function display_plugins( $plugins_string ) {
 
@@ -402,7 +403,7 @@ class Simple_Blueprint_Installer_Control {
 				$button_classes = 'install button';
 				$button_text    = esc_html__( 'Install Now', 'simple-blueprint-installer' );
 				$api            = plugins_api(
-				'plugin_information',
+					'plugin_information',
 					array(
 						'slug'   => sanitize_file_name( $plugin_slug ),
 						'fields' => array(
@@ -463,11 +464,11 @@ class Simple_Blueprint_Installer_Control {
 
 		$plugins_array = explode( ',', $plugins_string );
 
-		foreach( $plugins_array as $key => $value ) {
+		foreach ( $plugins_array as $key => $value ) {
 			$plugins_array[ $key ] = trim( $value );
 		}
 
-		return array_diff( $plugins_array, array('') );
+		return array_diff( $plugins_array, array( '' ) );
 	}
 
 	/**
@@ -484,7 +485,7 @@ class Simple_Blueprint_Installer_Control {
 		foreach ( $plugins as $plugin_file => $plugin_info ) {
 			$slug = dirname( plugin_basename( $plugin_file ) );
 			if ( $slug ) {
-				if ( $slug == $plugin_slug ) {
+				if ( $slug === $plugin_slug ) {
 					return $plugin_file;
 				}
 			}

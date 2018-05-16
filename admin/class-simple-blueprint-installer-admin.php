@@ -61,8 +61,8 @@ class Simple_Blueprint_Installer_Admin {
 		$this->version     = $version;
 
 		$this->files_to_delete = array(
-			'wp-config-sample.php'	=> trailingslashit( ABSPATH ) . 'wp-config-sample.php',
-			'readme.html'			=> trailingslashit( ABSPATH ) . 'readme.html',
+			'wp-config-sample.php' => trailingslashit( ABSPATH ) . 'wp-config-sample.php',
+			'readme.html'          => trailingslashit( ABSPATH ) . 'readme.html',
 		);
 
 		$this->load_dependencies();
@@ -174,6 +174,9 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	public function display_plugin_blueprint_tab() {
 
+		/**
+		 * Enqueue scripts only into this plugin tab
+		 */
 		wp_enqueue_script( $this->plugin_name );
 		wp_enqueue_style( $this->plugin_name );
 
@@ -189,28 +192,32 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	public function display_plugin_settings_tab() {
 
+		/**
+		 * Enqueue scripts only into this plugin tab.
+		 */
 		wp_enqueue_script( $this->plugin_name );
 		wp_enqueue_style( $this->plugin_name );
 
+		/**
+		 * Cleaning Tasks.
+		 */
 		$default_post = get_the_title( 1 );
 		$default_page = get_the_title( 2 );
-		$category_name = get_cat_name( 1 );
-		$permalink = get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : '/%postname%/';
-		$allow_html = array( 'code' => array() );
 
-		$themes = wp_get_themes();
+		$themes        = wp_get_themes();
 		$current_theme = get_template();
-		if ( 1 != count( $themes ) ) {
+		if ( 1 !== count( $themes ) ) {
 			$themes_names = '';
 			foreach ( $themes as $theme_name => $theme_object ) {
-				if ( $theme_name == $current_theme ) { continue; }
+				if ( $theme_name === $current_theme ) {
+					continue; }
 				$themes_names .= '<code>' . $theme_name . '</code> ';
 			}
 		} else {
 			$themes = false;
 		}
 
-		$files_to_delete = '';
+		$files_to_delete      = '';
 		$files_already_delete = '';
 		foreach ( $this->files_to_delete as $file_name => $file_url ) {
 			if ( file_exists( $file_url ) ) {
@@ -219,6 +226,42 @@ class Simple_Blueprint_Installer_Admin {
 				$files_already_delete .= '<code>' . $file_name . '</code> ';
 			}
 		}
+		$allow_html = array( 'code' => array() );
+
+		/**
+		 * Other Tasks.
+		 */
+		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
+		$languages    = get_available_languages();
+		$translations = wp_get_available_translations();
+		$locale       = get_locale();
+		if ( ! in_array( $locale, $languages ) ) {
+			$locale = '';
+		}
+
+		$current_offset = get_option( 'gmt_offset' );
+		$tzstring       = get_option( 'timezone_string' );
+		if ( false !== strpos( $tzstring, 'Etc/GMT' ) ) {
+			$tzstring = '';
+		}
+		if ( empty( $tzstring ) ) {
+			if ( 0 === $current_offset ) {
+				$tzstring = 'UTC+0';
+			} elseif ( $current_offset < 0 ) {
+				$tzstring = 'UTC' . $current_offset;
+			} else {
+				$tzstring = 'UTC+' . $current_offset;
+			}
+		}
+
+		$date_formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y' ), 'Y-m-d', 'm/d/Y', 'd/m/Y' ) ) );
+		$time_formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a' ), 'g:i A', 'H:i' ) ) );
+
+		$category_name  = get_cat_name( 1 );
+		$category_base  = get_option( 'category_base' );
+		$tag_base       = get_option( 'tag_base' );
+		$permalink      = get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : '/%postname%/';
+		$available_tags = array( 'year', 'monthnum', 'day', 'hour', 'minute', 'second', 'post_id', 'postname', 'category', 'author' );
 
 		if ( 'open' === get_option( 'default_comment_status' ) || 'open' === get_option( 'default_ping_status' ) || '1' === get_option( 'default_pingback_flag' ) ) {
 			$pings = true;
@@ -226,38 +269,11 @@ class Simple_Blueprint_Installer_Admin {
 			$pings = false;
 		}
 
-		$category_base       = get_option( 'category_base' );
-		$tag_base            = get_option( 'tag_base' );
-
-		$available_tags = array('year','monthnum','day','hour','minute','second','post_id','postname','category','author');
-
-		require_once ABSPATH . '/wp-admin/includes/translation-install.php';
-		$languages = get_available_languages();
-		$translations = wp_get_available_translations();
-		$locale = get_locale();
-		if ( ! in_array( $locale, $languages ) ) {
-			$locale = '';
-		}
-
-		$current_offset = get_option('gmt_offset');
-		$tzstring = get_option('timezone_string');
-
-		// Remove old Etc mappings. Fallback to gmt_offset.
-		if ( false !== strpos( $tzstring,'Etc/GMT' ) )
-			$tzstring = '';
-		if ( empty( $tzstring ) ) { // Create a UTC+- zone if no timezone string exists
-			if ( 0 == $current_offset )
-				$tzstring = 'UTC+0';
-			elseif ( $current_offset < 0 )
-				$tzstring = 'UTC' . $current_offset;
-			else
-				$tzstring = 'UTC+' . $current_offset;
-		}
-
-		$date_formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y' ), 'Y-m-d', 'm/d/Y', 'd/m/Y' ) ) );
-		$time_formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a' ), 'g:i A', 'H:i' ) ) );
-
+		/**
+		 * Include here all html with a view file.
+		 */
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-plugin-settings-view.php';
+
 	}
 
 	/**
@@ -270,9 +286,11 @@ class Simple_Blueprint_Installer_Admin {
 
 		check_admin_referer( 'sbi_setup_form', 'sbi_setup_nonce' );
 
-		// Handle translation installation.
+		/**
+		 * Handle translation installation.
+		 */
 		if ( ! empty( $_POST['WPLANG'] ) && current_user_can( 'install_languages' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+			require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 
 			if ( wp_can_install_language_pack() ) {
 				$language = wp_download_language_pack( $_POST['WPLANG'] );
@@ -282,58 +300,84 @@ class Simple_Blueprint_Installer_Admin {
 				}
 			}
 		}
-		if( 'on' == $_POST['hello'] ){
-			$this->delete_post_by_id( 1 );
-		}
-		if( '' == $_POST['WPLANG'] ){
-			$this->set_wplang( '' );
-		}
-		if( 'on' == $_POST['sample'] ){
-			$this->delete_post_by_id( 2 );
-		}
-		if( 'on' == $_POST['themes'] ){
-			$this->delete_themes_except_given( get_template() );
-		}
-		if( 'on' == $_POST['files'] ){
-			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
-		}
-		if( isset( $_POST['date_format'] ) && '' != $_POST['date_format'] ){
-			$this->set_date_format( $_POST['date_format'] );
-		}
-		if( isset( $_POST['time_format'] ) && '' != $_POST['time_format'] ){
-			$this->set_time_format( $_POST['time_format'] );
-		}
-		if( 'on' == $_POST['pings'] ){
-			$this->disable_pings_trackbacks_comments();
-		}
-		if( isset( $_POST['category'] ) && '' != $_POST['category'] ){
-			$this->set_default_category_name( $_POST['category'] );
-		}
-		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
-			$this->set_custom_permalink( $_POST['permalink'] );
-		}
-		// Map UTC+- timezones to gmt_offsets and set timezone_string to empty.
+
+		/**
+		 * Map UTC+- timezones to gmt_offsets and set timezone_string to empty.
+		 */
 		if ( ! empty( $_POST['timezone_string'] ) && preg_match( '/^UTC[+-]/', $_POST['timezone_string'] ) ) {
-			$_POST['gmt_offset'] = $_POST['timezone_string'];
-			$_POST['gmt_offset'] = preg_replace('/UTC\+?/', '', $_POST['gmt_offset']);
+			$_POST['gmt_offset']      = $_POST['timezone_string'];
+			$_POST['gmt_offset']      = preg_replace( '/UTC\+?/', '', $_POST['gmt_offset'] );
 			$_POST['timezone_string'] = '';
 		}
+
+		/**
+		 * Cleaning Tasks.
+		 */
+		if ( 'on' === $_POST['hello'] ) {
+			$this->delete_post_by_id( 1 );
+		}
+		if ( 'on' === $_POST['sample'] ) {
+			$this->delete_post_by_id( 2 );
+		}
+		if ( 'on' === $_POST['themes'] ) {
+			$this->delete_themes_except_given( get_template() );
+		}
+		if ( 'on' === $_POST['files'] ) {
+			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
+		}
+
+		/**
+		 * Other Tasks.
+		 */
+		if ( '' == $_POST['WPLANG'] ) {
+			$this->set_wplang( '' );
+		}
+
 		$timezone = array(
-			'timezone_string'	=> $_POST['timezone_string'],
-			'gmt_offset'		=> $_POST['gmt_offset'],
+			'timezone_string' => $_POST['timezone_string'],
+			'gmt_offset'      => $_POST['gmt_offset'],
 		);
 		$this->set_timezone( $timezone );
+
+		if ( isset( $_POST['date_format'] ) && '' != $_POST['date_format'] ) {
+			$this->set_date_format( $_POST['date_format'] );
+		}
+		if ( isset( $_POST['time_format'] ) && '' != $_POST['time_format'] ) {
+			$this->set_time_format( $_POST['time_format'] );
+		}
+
+		if ( isset( $_POST['category'] ) && '' != $_POST['category'] ) {
+			$this->set_default_category_name( $_POST['category'] );
+		}
 		$this->set_category_base( $_POST['category_base'] );
 		$this->set_tag_base( $_POST['tag_base'] );
+
+		if ( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ) {
+			$this->set_custom_permalink( $_POST['permalink'] );
+		}
+		if ( 'on' === $_POST['pings'] ) {
+			$this->disable_pings_trackbacks_comments();
+		}
+
 		$this->update_media_options( $_POST['media'] );
 		$this->update_indexing_options( $_POST['indexing'] );
+
+		/**
+		 * The last thing to do before deactivate this plugin
+		 */
 		flush_rewrite_rules();
 
-		if( 'on' == $_POST['deactivate'] ){
+		/**
+		 * Deactivate this plugin if user want it
+		 */
+		if ( 'on' === $_POST['deactivate'] ) {
 			$this->deactivate_this_plugin();
 		}
 
-		wp_redirect( esc_url( $_POST['_wp_http_referer'] ) );
+		/**
+		 * Go back to settings tab if plugin is not deactivate
+		 */
+		wp_safe_redirect( esc_url( $_POST['_wp_http_referer'] ) );
 		exit;
 	}
 
@@ -347,7 +391,7 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function delete_post_by_id( $post_id ) {
 
-		wp_delete_post( (int) $post_id , true );
+		wp_delete_post( (int) $post_id, true );
 
 	}
 
@@ -360,8 +404,9 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function delete_themes_except_given( $current_theme ) {
 
-		foreach( wp_get_themes() as $theme_name => $theme_object ) {
-			if ( $theme_name == $current_theme ) { continue; }
+		foreach ( wp_get_themes() as $theme_name => $theme_object ) {
+			if ( $theme_name === $current_theme ) {
+				continue; }
 			delete_theme( $theme_name );
 		}
 
@@ -372,7 +417,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   array $files_to_delete Array with the path of files to delete
+	 * @param   array $files_to_delete Array with the path of files to delete.
 	 */
 	private function delete_wp_core_unnecessary_files( $files_to_delete ) {
 
@@ -389,7 +434,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $value String with the option to change
+	 * @param   string $value String with the option to change.
 	 */
 	private function set_wplang( $value ) {
 
@@ -408,7 +453,7 @@ class Simple_Blueprint_Installer_Admin {
 		 */
 		unset( $GLOBALS['locale'] );
 		$user_language_new = get_user_locale();
-		if ( $user_language_old !== $user_language_new  ) {
+		if ( $user_language_old !== $user_language_new ) {
 			load_default_textdomain( $user_language_new );
 		}
 	}
@@ -418,7 +463,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   array $timezone Array with the options to change
+	 * @param   array $timezone Array with the options to change.
 	 */
 	private function set_timezone( $timezone ) {
 
@@ -438,7 +483,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $value String with the option to change
+	 * @param   string $value String with the option to change.
 	 */
 	private function set_date_format( $value ) {
 
@@ -455,7 +500,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $value String with the option to change
+	 * @param   string $value String with the option to change.
 	 */
 	private function set_time_format( $value ) {
 
@@ -475,15 +520,15 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function disable_pings_trackbacks_comments() {
 
-		if( 'open' === get_option( 'default_comment_status' ) ) {
+		if ( 'open' === get_option( 'default_comment_status' ) ) {
 			update_option( 'default_comment_status', 'closed' );
 		}
 
-		if( 'open' === get_option( 'default_ping_status' ) ) {
+		if ( 'open' === get_option( 'default_ping_status' ) ) {
 			update_option( 'default_ping_status', 'closed' );
 		}
 
-		if( '1' === get_option( 'default_pingback_flag' ) ) {
+		if ( '1' === get_option( 'default_pingback_flag' ) ) {
 			update_option( 'default_pingback_flag', '' );
 		}
 
@@ -494,7 +539,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param	 string $option The selection to update media options
+	 * @param    string $option The selection to update media options.
 	 */
 	private function update_media_options( $option ) {
 
@@ -511,7 +556,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param	 string $option The selection to update indexing options
+	 * @param    string $option The selection to update indexing options.
 	 */
 	private function update_indexing_options( $option ) {
 		if ( isset( $option ) && '0' === $option ) {
@@ -543,7 +588,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $new_category_name String with the new name of the general category of posts
+	 * @param   string $new_category_name String with the new name of the general category of posts.
 	 */
 	private function set_default_category_name( $new_category_name ) {
 
@@ -553,9 +598,9 @@ class Simple_Blueprint_Installer_Admin {
 			1,
 			'category',
 			array(
-			  'name' => $new_category_name,
-			  'slug' => str_replace( ' ', '-', strtolower( $new_category_name ) ),
-		  	)
+				'name' => $new_category_name,
+				'slug' => str_replace( ' ', '-', strtolower( $new_category_name ) ),
+			)
 		);
 	}
 
@@ -564,7 +609,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $new_category_base String with the new name of the base category
+	 * @param   string $new_category_base String with the new name of the base category.
 	 */
 	private function set_category_base( $new_category_base ) {
 		global $wp_rewrite;
@@ -576,7 +621,7 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $new_category_base String with the new name of the base tag
+	 * @param   string $new_tag_base String with the new name of the base tag.
 	 */
 	private function set_tag_base( $new_tag_base ) {
 		global $wp_rewrite;
@@ -588,10 +633,11 @@ class Simple_Blueprint_Installer_Admin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @param   string $new_custom_permalink String with the new custom permalink to set
+	 * @param   string $new_custom_permalink String with the new custom permalink to set.
 	 */
 	private function set_custom_permalink( $new_custom_permalink ) {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure( sanitize_option( 'permalink_structure', $new_custom_permalink ) );
 	}
+
 }

@@ -22,9 +22,7 @@
 class Simple_Blueprint_Installer_Deactivator {
 
 	/**
-	 * Delete option set in activation of this plugin
-	 *
-	 * When the plugin is activate this option control to redirect only the first time
+	 * Delete options set in activation of this plugin
 	 *
 	 * @since    1.0.0
 	 */

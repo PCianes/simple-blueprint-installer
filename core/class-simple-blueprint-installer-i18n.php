@@ -58,6 +58,4 @@ class Simple_Blueprint_Installer_I18n {
 
 	}
 
-
-
 }

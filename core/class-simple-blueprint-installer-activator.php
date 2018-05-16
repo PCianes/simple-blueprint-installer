@@ -25,6 +25,7 @@ class Simple_Blueprint_Installer_Activator {
 	 * Set option to redirect to new settings page of this plugin after activate
 	 *
 	 * When the plugin is activate this option control to redirect only the first time
+	 * Also set the 'blueprint' with all the plugins already installed
 	 *
 	 * @since    1.0.0
 	 */
