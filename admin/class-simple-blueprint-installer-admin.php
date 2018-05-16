@@ -140,6 +140,25 @@ class Simple_Blueprint_Installer_Admin {
 	}
 
 	/**
+	 * Add into this plugin new link to settings & blueprint tabs
+	 * in the page of all plugins 'plugins.php'
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param array $links Array with all the links of the plugin.
+	 */
+	public function add_settings_link_on_plugins_table( $links ) {
+
+		$blueprint_link = '<a href="plugin-install.php?tab=sbi_blueprint">' . esc_html__( 'Blueprint', 'simple-blueprint-installer' ) . '</a>';
+		array_unshift( $links, $blueprint_link );
+
+		$settings_link = '<a href="plugin-install.php?tab=sbi_setup">' . esc_html__( 'Settings', 'simple-blueprint-installer' ) . '</a>';
+		array_unshift( $links, $settings_link );
+
+		return $links;
+	}
+
+	/**
 	 * Redirect to settings page the first time this plugin is activate
 	 *
 	 * @since    1.0.0

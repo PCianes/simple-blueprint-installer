@@ -171,6 +171,9 @@ class Simple_Blueprint_Installer {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		$plugin_basename = 'simple-blueprint-installer/simple-blueprint-installer.php';
+		$this->loader->add_filter( "plugin_action_links_{$plugin_basename}", $plugin_admin, 'add_settings_link_on_plugins_table' );
+
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'redirect_to_settings_page' );
 		$this->loader->add_filter( 'install_plugins_tabs', $plugin_admin, 'add_custom_tabs' );
 		$this->loader->add_action( 'install_plugins_sbi_blueprint', $plugin_admin, 'display_plugin_blueprint_tab' );
