@@ -91,7 +91,7 @@
 						<?php
 						foreach ( $date_formats as $format ) {
 							echo "\t<label><input type='radio' name='date_format' value='" . esc_attr( $format ) . "'";
-							if ( get_option('date_format') === $format ) { // checked() uses "==" rather than "==="
+							if ( get_option( 'date_format' ) === $format ) { // checked() uses "==" rather than "==="
 								echo " checked='checked'";
 								$custom = false;
 							}
@@ -109,7 +109,7 @@
 						<?php
 						foreach ( $time_formats as $format ) {
 							echo "\t<label><input type='radio' name='time_format' value='" . esc_attr( $format ) . "'";
-							if ( get_option('time_format') === $format ) { // checked() uses "==" rather than "==="
+							if ( get_option( 'time_format' ) === $format ) { // checked() uses "==" rather than "==="
 								echo " checked='checked'";
 								$custom = false;
 							}

@@ -241,6 +241,7 @@ class Simple_Blueprint_Installer_Admin {
 
 		$current_offset = get_option('gmt_offset');
 		$tzstring = get_option('timezone_string');
+
 		// Remove old Etc mappings. Fallback to gmt_offset.
 		if ( false !== strpos( $tzstring,'Etc/GMT' ) )
 			$tzstring = '';
@@ -269,8 +270,23 @@ class Simple_Blueprint_Installer_Admin {
 
 		check_admin_referer( 'sbi_setup_form', 'sbi_setup_nonce' );
 
+		// Handle translation installation.
+		if ( ! empty( $_POST['WPLANG'] ) && current_user_can( 'install_languages' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+
+			if ( wp_can_install_language_pack() ) {
+				$language = wp_download_language_pack( $_POST['WPLANG'] );
+				if ( $language ) {
+					$_POST['WPLANG'] = $language;
+					$this->set_wplang( $_POST['WPLANG'] );
+				}
+			}
+		}
 		if( 'on' == $_POST['hello'] ){
 			$this->delete_post_by_id( 1 );
+		}
+		if( '' == $_POST['WPLANG'] ){
+			$this->set_wplang( '' );
 		}
 		if( 'on' == $_POST['sample'] ){
 			$this->delete_post_by_id( 2 );
@@ -281,6 +297,12 @@ class Simple_Blueprint_Installer_Admin {
 		if( 'on' == $_POST['files'] ){
 			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
 		}
+		if( isset( $_POST['date_format'] ) && '' != $_POST['date_format'] ){
+			$this->set_date_format( $_POST['date_format'] );
+		}
+		if( isset( $_POST['time_format'] ) && '' != $_POST['time_format'] ){
+			$this->set_time_format( $_POST['time_format'] );
+		}
 		if( 'on' == $_POST['pings'] ){
 			$this->disable_pings_trackbacks_comments();
 		}
@@ -290,7 +312,17 @@ class Simple_Blueprint_Installer_Admin {
 		if( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ){
 			$this->set_custom_permalink( $_POST['permalink'] );
 		}
-
+		// Map UTC+- timezones to gmt_offsets and set timezone_string to empty.
+		if ( ! empty( $_POST['timezone_string'] ) && preg_match( '/^UTC[+-]/', $_POST['timezone_string'] ) ) {
+			$_POST['gmt_offset'] = $_POST['timezone_string'];
+			$_POST['gmt_offset'] = preg_replace('/UTC\+?/', '', $_POST['gmt_offset']);
+			$_POST['timezone_string'] = '';
+		}
+		$timezone = array(
+			'timezone_string'	=> $_POST['timezone_string'],
+			'gmt_offset'		=> $_POST['gmt_offset'],
+		);
+		$this->set_timezone( $timezone );
 		$this->set_category_base( $_POST['category_base'] );
 		$this->set_tag_base( $_POST['tag_base'] );
 		$this->update_media_options( $_POST['media'] );
@@ -349,6 +381,89 @@ class Simple_Blueprint_Installer_Admin {
 				unlink( $file_url );
 			}
 		}
+
+	}
+
+	/**
+	 * Set new WPLANG
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $value String with the option to change
+	 */
+	private function set_wplang( $value ) {
+
+		$user_language_old = get_user_locale();
+
+		if ( ! is_array( $value ) ) {
+			$value = trim( $value );
+		}
+		$value = wp_unslash( $value );
+		update_option( 'WPLANG', $value );
+
+		/*
+		 * Switch translation in case WPLANG was changed.
+		 * The global $locale is used in get_locale() which is
+		 * used as a fallback in get_user_locale().
+		 */
+		unset( $GLOBALS['locale'] );
+		$user_language_new = get_user_locale();
+		if ( $user_language_old !== $user_language_new  ) {
+			load_default_textdomain( $user_language_new );
+		}
+	}
+
+	/**
+	 * Set new timezone
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   array $timezone Array with the options to change
+	 */
+	private function set_timezone( $timezone ) {
+
+		foreach ( $timezone as $key => $value ) {
+			if ( isset( $value ) ) {
+				if ( ! is_array( $value ) ) {
+					$value = trim( $value );
+				}
+				$value = wp_unslash( $value );
+			}
+			update_option( $key, $value );
+		}
+	}
+
+	/**
+	 * Set new date format
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $value String with the option to change
+	 */
+	private function set_date_format( $value ) {
+
+		if ( ! is_array( $value ) ) {
+			$value = trim( $value );
+		}
+		$value = wp_unslash( $value );
+		update_option( 'date_format', $value );
+
+	}
+
+	/**
+	 * Set new time format
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @param   string $value String with the option to change
+	 */
+	private function set_time_format( $value ) {
+
+		if ( ! is_array( $value ) ) {
+			$value = trim( $value );
+		}
+		$value = wp_unslash( $value );
+		update_option( 'time_format', $value );
 
 	}
 
