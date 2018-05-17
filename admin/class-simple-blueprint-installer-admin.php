@@ -100,7 +100,7 @@ class Simple_Blueprint_Installer_Admin {
 		 * class.
 		 */
 
-		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/simple-blueprint-installer-admin.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/simple-blueprint-installer-admin.min.css', array(), $this->version, 'all' );
 
 	}
 
@@ -123,7 +123,7 @@ class Simple_Blueprint_Installer_Admin {
 		 * class.
 		 */
 
-		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-blueprint-installer-admin.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-blueprint-installer-admin.min.js', array( 'jquery' ), $this->version, false );
 
 		wp_localize_script(
 			$this->plugin_name,
