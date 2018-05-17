@@ -62,7 +62,7 @@ function plugin_name_custom_admin_notices() {
 						<li><code>gulp</code> to start test mode in console and run all the test into tests folder in auto mode when a file of the project is save it.</li>
 						<li><code>grunt</code> to make auto the plugin-name.pot into the languages folder, and <code>grunt watch</code> to make min files of CSS & JS. -->Stop with: <code>Ctrl + C</code></li>
 						<li>PHP CodeSniffer with WordPress standards. To configure it set <code>vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs.</code>
-						And also set <code>vendor/bin/phpcs --config-set default_standard WordPress</code> --> More info into <strong><a target="_blank" href="https://github.com/PCianes/WordPress-Plugin-Boilerplate">Cianes´ WP Boilerplate</a></strong></li>
+						And also set <code>vendor/bin/phpcs --config-set default_standard WordPress</code> --> More info into <strong><a target="_blank" href="https://github.com/PCianes/WordPress-Plugin-Boilerplate">Cianes\' WP Boilerplate</a></strong></li>
 						<li><code>php make class CLASS-NAME FOLDER-NAME</code> to create a new file into the FOLDER-NAME indicate with the name: class-simple-blueprint-installer-CLASS-NAME.php with some base code to start to work.</li>
 						<li><code>php make zip</code> to make a clean copy of the plugin into zip without all vendors and dev files.</li>
 					</ol>

@@ -1,114 +1,122 @@
-=== Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
+=== Simple blueprint installer by Cianes' WP Suite ===
+Contributors: pablocianes
 Donate link: https://pablocianes.com/
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
+Tags: blueprint, installer, delete default content, installation, setup
+Requires at least: 4.6
+Tested up to: 4.9.5
+Stable tag: trunk
+Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Install this as your first plugin and make easy and fast the first setup of your WordPress.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+This single use plugin make easy and fast the first setup of your WordPress because of you have two new tabs to manage better and quickly all important things you have to do after all new WordPress installation.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+The two new pages ( really are tabs ) available with this plugin and its possibilities:
 
-A few notes about the sections above:
+= 1.- Blueprint: =
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+After it is activated you will be redirected to management's page, which is a new tab called "Blueprint" within the native plugins installation page of WordPress.
+You can see it if you go to "add new plugin", close to others native tabs like "Featured, Popular, Recommended and Favourites".
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+You can change the default slugs's list of plugins ( with all the plugins already installed ) and add your own list of plugins and press the button `Set plugins` to be able to operate with them.
+After this you can see below the list of plugins like others native tabs of WordPress and operate one by one, or even activate the `danger button` and use the global actions that allow you to:
+`¡Delete all plugins`, `Install all plugins set`, `Activate all plugins set` and also `¡Deactivate all plugins`.
+Please be careful with this global options if you are in production mode and not in new installation.
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+Update the list of slugs with the button `Reset & Update` to set only the plugins already installed.
+
+Note: Before install all new plugins you may want to delete all defaults like `Hello Dolly` or `Akismet`.
+For that please press the oranges' danger button and then `¡Delete all plugins!`.
+After that you can work with your new blueprint = slugs' list of your favourite plugins to install.
+
+For more info please see below "Screenshots" and also read "Frequently Asked Questions".
+
+= 2.- Setup ( icon of a gear ): =
+
+Here you can set all your own quickly configuration, even one option to deactivate this plugin after finish the work.
+This tab is close to the other one.
+
+The available **Quick global settings** that you can decide what and how to establish at the push of the button `Do these actions` are:
+
+	**Cleaning Tasks:**
+   * Delete or not default post with id=1: `Hello World`
+   * Delete or not default post with id=2: `Example page`
+   * Delete or not all themes except current theme.
+   * Delete or not WordPress unnecessary core files: `wp-config-sample.php` and `readme.html`
+
+	**Other Tasks:**
+   * Set site language like in WordPress native page ( with auto translation installation ).
+   * Set timezone like in WordPress native page.
+   * Set date format selecting one of the most common.
+   * Set time format selecting one of the most common.
+   * Change the name ( and auto also the slug ) of the `Uncategorized` default category.
+   * Write if you want a custom `Category base` for permalinks.
+   * Write if you want a custom `Tag base` for permalinks.
+   * Set with default buttons or even writing the permalink structure.
+   * Disable pings, trackbacks and comments on new articles.
+   * Organize my uploads into month- and year-based folders.
+   * Discourage search engines from indexing this site.
+   * Deactivate this plugin upon completion.
+
+Note: This options page also informs you of the status of each option, such as if some options have been deleted or not, or the state of others based on what is really established in WordPress.
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload `simple-blueprint-installer.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Upload the plugin files to the `/wp-content/plugins/` directory, or into admin area of WordPress visit `Plugins -> Add New` and search `Simple blueprint installer`.
+2. Install & Activate the plugin through the `Plugins' page` in WordPress.
+3. After it is activated you will be redirected to the management's page, with all the plugins already installed as the first blueprint. You can also arrive to this page if you go to `add new plugin` and then go to new tab: `Blueprint`.
+4. You can change this list of plugins with their slugs and press the button `Set plugins` to be able to operate with them.
+5. **Important:** Before install all new plugins you may want to delete all defaults like `Hello Dolly` or `Akismet`. For that please press the oranges' danger button and then `¡Delete all plugins!`. After that you can work with your new blueprint = slugs' list of your favourite plugins to install.
+6. Go to the other new tab with the icon of a gear and set all your own quickly configuration, even one option to deactivate this plugin after finish the work.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Is this plugin for everyone? =
 
-An answer to that question.
+Chiefly it is for WordPress professionals who want to improve their workflow because of it is specially designed for them.
 
-= What about foo bar? =
+= Is it necessary for it to remain installed? =
 
-Answer to foo bar dilemma.
+It is not necessary, since it is only useful to help you with your first general configuration, saving you time, as well as avoiding forgetting important things.
+Also within the options is to disable this plugin when you finish your work, although then you will have to delete it.
+
+= What does "blueprint" mean for this plugin? =
+
+Here a `blueprint` is slugs' list of your favourite plugins to install.
+Write comma separated all the slugs of those plugins you want to install quickly and press the button `Set plugins` to be able to operate with them.
+Save where you want to future reference this collection of plugins as a simple text listing.
+
+= How can I set my own "blueprint" in each WordPress installation? =
+
+Write comma separated all the slugs of those plugins you want to install quickly as your own "blueprint".
+To make this list you can search the slugs directly on WordPress.org.
+Another way is just go to a WordPress installation, install this plugin, and then see in the "blueprint input" all the slugs of the plugins already installed as default first blueprint.
+Note: update the list of slugs with the button `Reset & Update` to set only the plugins already installed.
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Blueprint tab.
+2. Setup tab ( icon of a gear )
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
+= 1.0.0 =
+* First publicly available version
 
 == Upgrade Notice ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
+= 1.0.0 =
+* First publicly available version
 
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+== Feedback and support ==
 
-== Arbitrary section ==
+I would be happy to receive your feedback to improve this plugin.
+Please let me know through [support forums](https://wordpress.org/support/plugin/simple-blueprint-installer) if you like and remember to [leave a valuation](https://wordpress.org/support/plugin/simple-blueprint-installer/reviews/#new-post).
 
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
+Also you can contact me on my personal page [Pablo Cianes](https://pablocianes.com/) or even visit [Github of Simple Blueprint Installer](https://github.com/PCianes/simple-blueprint-installer) where you can find all the development code of this plugin.
 
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+I hope it is useful for you and leave a valuation! ;-) Thanks!

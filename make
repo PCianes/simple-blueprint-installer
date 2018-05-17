@@ -57,7 +57,7 @@ class Simple_Blueprint_Installer_Generator
             $dir = dir($currentDir);
 
             while (false !== ($node = $dir->read())) {
-                if ( ($node == '.vscode') || ($node == 'tests') || ($node == 'node_modules') || ($node == 'vendor') || ($node == 'tests') ||($node == 'phpunit.xml') ||($node == 'gruntfile.js') ||($node == 'gulpfile.js') ||($node == 'package.json') || ($node == '..') || ($node == '.') || ($node=='.git')  || ($node=='composer.json') || ($node=='composer.lock') || ($node=='.gitignore') || ($node =='simple-blueprint-installer-generator') || ($node=='readme.md') || ($node=='bitbucket-pipelines.yml') || ($node=='.gitmodules') || ($node=='.editorconfig') || ($node=='.jshintrc') || ($node=='make') ) {
+                if ( ($node == 'uninstall.php') || ($node == 'includes') || ($node == 'public') || ($node == 'LICENSE.txt') || ($node == '.vscode') || ($node == 'tests') || ($node == 'node_modules') || ($node == 'vendor') || ($node == 'tests') ||($node == 'phpunit.xml') ||($node == 'gruntfile.js') ||($node == 'gulpfile.js') ||($node == 'package.json') || ($node == '..') || ($node == '.') || ($node=='.git')  || ($node=='composer.json') || ($node=='composer.lock') || ($node=='.gitignore') || ($node =='simple-blueprint-installer-generator') || ($node=='readme.md') || ($node=='bitbucket-pipelines.yml') || ($node=='.gitmodules') || ($node=='.editorconfig') || ($node=='.jshintrc') || ($node=='make') ) {
                     continue;
                 }
                 if (is_dir($currentDir . $node)) {
