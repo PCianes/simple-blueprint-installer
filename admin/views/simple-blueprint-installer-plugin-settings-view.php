@@ -48,13 +48,13 @@
 					echo '<code>' . esc_html( $current_theme ) . '</code><br>';
 				endif;
 			?>
-			<?php if ( '' != $files_to_delete ) : ?>
+			<?php if ( '' !== $files_to_delete ) : ?>
 			<tr>
 				<td><label><input name="files" type="checkbox" checked /><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allow_html ); ?></label></td>
 			</tr>
 			<?php endif; ?>
 			<?php
-			if ( '' != $files_already_delete ) :
+			if ( '' !== $files_already_delete ) :
 				esc_html_e( '- WordPress unnecessary core files already deleted: ', 'simple-blueprint-installer' );
 				echo wp_kses( $files_already_delete, $allow_html );
 				endif;
@@ -86,7 +86,7 @@
 				<th scope="row"><label for="timezone_string"><?php esc_html_e( 'Timezone', 'simple-blueprint-installer' ); ?></label></th>
 				<td>
 					<select id="timezone_string" name="timezone_string" aria-describedby="timezone-description">
-						<?php echo wp_timezone_choice( $tzstring, get_user_locale() ); ?>
+						<?php echo wp_kses( wp_timezone_choice( $tzstring, get_user_locale() ), $allowed_html ); ?>
 					</select>
 				</td>
 			</tr>
@@ -98,11 +98,11 @@
 						<?php
 						foreach ( $date_formats as $format ) {
 							echo "\t<label><input type='radio' name='date_format' value='" . esc_attr( $format ) . "'";
-							if ( get_option( 'date_format' ) === $format ) { // checked() uses "==" rather than "==="
+							if ( get_option( 'date_format' ) === $format ) { // checked() uses "==" rather than "===".
 								echo " checked='checked'";
 								$custom = false;
 							}
-							echo ' /> <span class="date-time-text format-i18n">' . date_i18n( $format ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
+							echo ' /> <span class="date-time-text format-i18n">' . esc_html( date_i18n( $format ) ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
 						}
 						?>
 					</fieldset>
@@ -116,11 +116,11 @@
 						<?php
 						foreach ( $time_formats as $format ) {
 							echo "\t<label><input type='radio' name='time_format' value='" . esc_attr( $format ) . "'";
-							if ( get_option( 'time_format' ) === $format ) { // checked() uses "==" rather than "==="
+							if ( get_option( 'time_format' ) === $format ) { // checked() uses "==" rather than "===".
 								echo " checked='checked'";
 								$custom = false;
 							}
-							echo ' /> <span class="date-time-text format-i18n">' . date_i18n( $format ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
+							echo ' /> <span class="date-time-text format-i18n">' . esc_html( date_i18n( $format ) ) . '</span><code>' . esc_html( $format ) . "</code></label><br />\n";
 						}
 						?>
 					</fieldset>
@@ -140,14 +140,14 @@
 				<input type="text" id="tag_base" name="tag_base" value="<?php echo esc_html( $tag_base ); ?>" class="regular-text code">
 			</tr>
 			<tr>
-				<th><label for="permalink"><code><?php echo get_site_url(); ?></code></label></th>
+				<th><label for="permalink"><code><?php echo esc_url( get_site_url() ); ?></code></label></th>
 				<td>
 				<input type="text" id="permalink" name="permalink" value="<?php echo esc_html( $permalink ); ?>" class="regular-text code">
 			</tr>
 		</table>
 		<ul role="list" id="sbi-permalink-list">
 			<?php foreach ( $available_tags as $tag ) : ?>
-				<li><button type="button" class="button button-secondary"><?php echo '%' . $tag . '%'; ?></button></li>
+				<li><button type="button" class="button button-secondary"><?php echo '%' . esc_html( $tag ) . '%'; ?></button></li>
 			<?php endforeach; ?>
 		</ul>
 		<table class="form-table">

@@ -245,7 +245,26 @@ class Simple_Blueprint_Installer_Admin {
 				$files_already_delete .= '<code>' . $file_name . '</code> ';
 			}
 		}
-		$allow_html = array( 'code' => array() );
+		$allowed_html = array(
+			'p'        => array(),
+			'span'     => array(
+				'class' => array(),
+			),
+			'strong'   => array(),
+			'br'       => array(),
+			'code'     => array(),
+			'select'   => array(),
+			'optgroup' => array(
+				'label'    => array(),
+				'value'    => array(),
+				'selected' => array(),
+			),
+			'option'   => array(
+				'label'    => array(),
+				'value'    => array(),
+				'selected' => array(),
+			),
+		);
 
 		/**
 		 * Other Tasks.
@@ -254,7 +273,7 @@ class Simple_Blueprint_Installer_Admin {
 		$languages    = get_available_languages();
 		$translations = wp_get_available_translations();
 		$locale       = get_locale();
-		if ( ! in_array( $locale, $languages ) ) {
+		if ( ! in_array( $locale, $languages, true ) ) {
 			$locale = '';
 		}
 
@@ -312,10 +331,10 @@ class Simple_Blueprint_Installer_Admin {
 			require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 
 			if ( wp_can_install_language_pack() ) {
-				$language = wp_download_language_pack( $_POST['WPLANG'] );
+				$language = wp_download_language_pack( sanitize_text_field( wp_unslash( $_POST['WPLANG'] ) ) );
 				if ( $language ) {
 					$_POST['WPLANG'] = $language;
-					$this->set_wplang( $_POST['WPLANG'] );
+					$this->set_wplang( sanitize_text_field( wp_unslash( $_POST['WPLANG'] ) ) );
 				}
 			}
 		}
@@ -323,63 +342,81 @@ class Simple_Blueprint_Installer_Admin {
 		/**
 		 * Map UTC+- timezones to gmt_offsets and set timezone_string to empty.
 		 */
-		if ( ! empty( $_POST['timezone_string'] ) && preg_match( '/^UTC[+-]/', $_POST['timezone_string'] ) ) {
-			$_POST['gmt_offset']      = $_POST['timezone_string'];
-			$_POST['gmt_offset']      = preg_replace( '/UTC\+?/', '', $_POST['gmt_offset'] );
+		if ( ! empty( $_POST['timezone_string'] ) ) {
+			$timezone_string = sanitize_text_field( wp_unslash( $_POST['timezone_string'] ) );
+		}
+		if ( ! empty( $timezone_string ) && preg_match( '/^UTC[+-]/', $timezone_string ) ) {
+			$_POST['gmt_offset']      = $timezone_string;
+			$_POST['gmt_offset']      = preg_replace( '/UTC\+?/', '', $timezone_string );
 			$_POST['timezone_string'] = '';
+			$timezone_string          = '';
 		}
 
 		/**
 		 * Cleaning Tasks.
 		 */
-		if ( 'on' === $_POST['hello'] ) {
+		if ( ! empty( $_POST['hello'] ) && 'on' === $_POST['hello'] ) {
 			$this->delete_post_by_id( 1 );
 		}
-		if ( 'on' === $_POST['sample'] ) {
+		if ( ! empty( $_POST['sample'] ) && 'on' === $_POST['sample'] ) {
 			$this->delete_post_by_id( 2 );
 		}
-		if ( 'on' === $_POST['themes'] ) {
+		if ( ! empty( $_POST['themes'] ) && 'on' === $_POST['themes'] ) {
 			$this->delete_themes_except_given( get_template() );
 		}
-		if ( 'on' === $_POST['files'] ) {
+		if ( ! empty( $_POST['files'] ) && 'on' === $_POST['files'] ) {
 			$this->delete_wp_core_unnecessary_files( $this->files_to_delete );
 		}
 
 		/**
 		 * Other Tasks.
 		 */
-		if ( '' == $_POST['WPLANG'] ) {
+		if ( '' === $_POST['WPLANG'] ) {
 			$this->set_wplang( '' );
 		}
-
-		$timezone = array(
-			'timezone_string' => $_POST['timezone_string'],
-			'gmt_offset'      => $_POST['gmt_offset'],
+		$gmt_offset ='';
+		if ( ! empty( $_POST['gmt_offset'] ) ) {
+			$gmt_offset = sanitize_text_field( wp_unslash( $_POST['gmt_offset'] ) );
+		}
+		$timezone_array = array(
+			'timezone_string' => $timezone_string,
+			'gmt_offset'      => $gmt_offset,
 		);
-		$this->set_timezone( $timezone );
+		$this->set_timezone( $timezone_array );
 
-		if ( isset( $_POST['date_format'] ) && '' != $_POST['date_format'] ) {
-			$this->set_date_format( $_POST['date_format'] );
+		if ( isset( $_POST['date_format'] ) && '' !== $_POST['date_format'] ) {
+			$this->set_date_format( sanitize_text_field( wp_unslash( $_POST['date_format'] ) ) );
 		}
-		if ( isset( $_POST['time_format'] ) && '' != $_POST['time_format'] ) {
-			$this->set_time_format( $_POST['time_format'] );
+		if ( isset( $_POST['time_format'] ) && '' !== $_POST['time_format'] ) {
+			$this->set_time_format( sanitize_text_field( wp_unslash( $_POST['time_format'] ) ) );
 		}
 
-		if ( isset( $_POST['category'] ) && '' != $_POST['category'] ) {
-			$this->set_default_category_name( $_POST['category'] );
+		if ( isset( $_POST['category'] ) && '' !== $_POST['category'] ) {
+			$this->set_default_category_name( sanitize_text_field( wp_unslash( $_POST['category'] ) ) );
 		}
-		$this->set_category_base( $_POST['category_base'] );
-		$this->set_tag_base( $_POST['tag_base'] );
-
-		if ( isset( $_POST['permalink'] ) && '' != $_POST['permalink'] ) {
-			$this->set_custom_permalink( $_POST['permalink'] );
+		if ( isset( $_POST['category_base'] ) && '' !== $_POST['category_base'] ) {
+			$this->set_category_base( sanitize_text_field( wp_unslash( $_POST['category_base'] ) ) );
 		}
-		if ( 'on' === $_POST['pings'] ) {
+		if ( isset( $_POST['tag_base'] ) && '' !== $_POST['tag_base'] ) {
+			$this->set_tag_base( sanitize_text_field( wp_unslash( $_POST['tag_base'] ) ) );
+		}
+		if ( isset( $_POST['permalink'] ) && '' !== $_POST['permalink'] ) {
+			$this->set_custom_permalink( sanitize_option( 'permalink_structure', wp_unslash( $_POST['permalink'] ) ) );
+		}
+		if ( isset( $_POST['pings'] ) && 'on' === $_POST['pings'] ) {
 			$this->disable_pings_trackbacks_comments();
 		}
 
-		$this->update_media_options( $_POST['media'] );
-		$this->update_indexing_options( $_POST['indexing'] );
+		if ( isset( $_POST['media'] ) ) {
+			$this->update_media_options( sanitize_text_field( wp_unslash( $_POST['media'] ) ) );
+		} else {
+			$this->update_media_options( false );
+		}
+		if ( isset( $_POST['indexing'] ) && '0' === $_POST['indexing'] ) {
+			$this->update_indexing_options( '0' );
+		} else {
+			$this->update_indexing_options( '1' );
+		}
 
 		/**
 		 * The last thing to do before deactivate this plugin
@@ -389,15 +426,18 @@ class Simple_Blueprint_Installer_Admin {
 		/**
 		 * Deactivate this plugin if user want it
 		 */
-		if ( 'on' === $_POST['deactivate'] ) {
+		if ( isset( $_POST['deactivate'] ) && 'on' === $_POST['deactivate'] ) {
 			$this->deactivate_this_plugin();
 		}
 
 		/**
 		 * Go back to settings tab if plugin is not deactivate
 		 */
-		wp_safe_redirect( esc_url( $_POST['_wp_http_referer'] ) );
-		exit;
+		if ( ! empty( $_POST['_wp_http_referer'] ) ) {
+			wp_safe_redirect( esc_url( $_POST['_wp_http_referer'] ) );
+			exit;
+		}
+
 	}
 
 	/**
@@ -562,7 +602,7 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function update_media_options( $option ) {
 
-		if ( isset( $option ) ) {
+		if ( $option ) {
 			update_option( 'uploads_use_yearmonth_folders', '1' );
 		} else {
 			update_option( 'uploads_use_yearmonth_folders', '' );
@@ -578,12 +618,7 @@ class Simple_Blueprint_Installer_Admin {
 	 * @param    string $option The selection to update indexing options.
 	 */
 	private function update_indexing_options( $option ) {
-		if ( isset( $option ) && '0' === $option ) {
-			update_option( 'blog_public', '0' );
-		} else {
-			update_option( 'blog_public', '1' );
-		}
-
+		update_option( 'blog_public', $option );
 	}
 
 	/**

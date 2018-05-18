@@ -12,8 +12,7 @@
  * @package           Simple_Blueprint_Installer
  *
  * @wordpress-plugin
- * Plugin Name:       Simple blueprint installer by Cianes' WP Suite
- * Plugin URI:        https://pablocianes.com/
+ * Plugin Name:       Simple blueprint installer
  * Description:       Install this as your first plugin and make easy and fast the first setup of your WordPress.
  * Version:           1.0.0
  * Author:            Pablo Cianes

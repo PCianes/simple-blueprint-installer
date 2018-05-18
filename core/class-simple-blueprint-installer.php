@@ -76,8 +76,7 @@ class Simple_Blueprint_Installer {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
-		//$this->define_public_hooks();
-
+		// $this->define_public_hooks();
 	}
 
 	/**
@@ -119,16 +118,13 @@ class Simple_Blueprint_Installer {
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-simple-blueprint-installer-public.php';
-
+		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-simple-blueprint-installer-public.php';
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site and also into admin area, like libraries and helpers
 		 */
-		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-blueprint-installer-includes.php';
-
-		//$includes = new Simple_Blueprint_Installer_Includes( $this->get_plugin_name(), $this->get_version() );
-
+		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-blueprint-installer-includes.php';
+		// $includes = new Simple_Blueprint_Installer_Includes( $this->get_plugin_name(), $this->get_version() );
 		/**
 		 * Get loader using its singleton
 		 */

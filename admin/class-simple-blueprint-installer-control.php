@@ -83,7 +83,7 @@ class Simple_Blueprint_Installer_Control {
 			$plugins_activate               = array();
 			$plugins_not_activate           = array();
 			foreach ( $plugins_array as $plugin_slug ) {
-				if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
+				if ( in_array( $plugin_slug, $all_plugins_installed_by_array, true ) ) {
 					$response = self::activate_plugin( $plugin_slug );
 				}
 				if ( 'success' === $response['status'] ) {
@@ -132,7 +132,7 @@ class Simple_Blueprint_Installer_Control {
 		$plugins_not_installed          = array();
 
 		foreach ( $plugins_array as $plugin_slug ) {
-			if ( in_array( $plugin_slug, $all_plugins_installed_by_array ) ) {
+			if ( in_array( $plugin_slug, $all_plugins_installed_by_array, true ) ) {
 				continue;
 			}
 			$response = self::install_plugin( $plugin_slug );
@@ -372,12 +372,12 @@ class Simple_Blueprint_Installer_Control {
 
 		$plugins_string = get_option( 'sbi_plugins_blueprint' );
 
-		if ( isset( $_POST['blueprint_register_nonce'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce'], 'blueprint_generate_nonce' ) ) {
-			$plugins_string = sanitize_text_field( $_POST['blueprint_plugins'] );
+		if ( isset( $_POST['blueprint_plugins'] ) && isset( $_POST['blueprint_register_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['blueprint_register_nonce'] ) ), 'blueprint_generate_nonce' ) ) {
+			$plugins_string = sanitize_text_field( wp_unslash( $_POST['blueprint_plugins'] ) );
 			update_option( 'sbi_plugins_blueprint', $plugins_string, true );
 		}
 
-		if ( isset( $_POST['sbi-update'] ) && wp_verify_nonce( $_POST['blueprint_register_nonce_update'], 'blueprint_generate_nonce_update' ) ) {
+		if ( isset( $_POST['sbi-update'] ) && isset( $_POST['blueprint_register_nonce_update'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['blueprint_register_nonce_update'] ) ), 'blueprint_generate_nonce_update' ) ) {
 			$plugins_string = self::get_all_plugins_installed_by_slug();
 			update_option( 'sbi_plugins_blueprint', $plugins_string, true );
 		}

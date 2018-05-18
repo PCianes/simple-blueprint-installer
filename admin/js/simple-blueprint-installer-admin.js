@@ -137,7 +137,7 @@ jQuery( document ).ready(
 						console.log( status );
 						button.removeClass( 'installing' );
 						isLoading = false;
-						location.reload(true);
+						location.reload( true );
 					}
 				}
 			);
