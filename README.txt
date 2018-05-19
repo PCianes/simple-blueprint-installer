@@ -3,7 +3,7 @@ Contributors: pablocianes
 Donate link: https://pablocianes.com/
 Tags: blueprint, installer, delete default content, installation, setup
 Requires at least: 4.6
-Tested up to: 4.9.5
+Tested up to: 4.9.6
 Stable tag: trunk
 Requires PHP: 5.2.4
 License: GPLv2 or later
@@ -101,6 +101,7 @@ Note: update the list of slugs with the button `Reset & Update` to set only the 
 
 1. Blueprint tab.
 2. Setup tab ( icon of a gear )
+3. Setup tab - deactivate this plugin
 
 == Changelog ==
 

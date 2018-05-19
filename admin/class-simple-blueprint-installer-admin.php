@@ -394,10 +394,10 @@ class Simple_Blueprint_Installer_Admin {
 		if ( isset( $_POST['category'] ) && '' !== $_POST['category'] ) {
 			$this->set_default_category_name( sanitize_text_field( wp_unslash( $_POST['category'] ) ) );
 		}
-		if ( isset( $_POST['category_base'] ) && '' !== $_POST['category_base'] ) {
+		if ( isset( $_POST['category_base'] ) || '' === $_POST['category_base'] ) {
 			$this->set_category_base( sanitize_text_field( wp_unslash( $_POST['category_base'] ) ) );
 		}
-		if ( isset( $_POST['tag_base'] ) && '' !== $_POST['tag_base'] ) {
+		if ( isset( $_POST['tag_base'] ) || '' === $_POST['tag_base'] ) {
 			$this->set_tag_base( sanitize_text_field( wp_unslash( $_POST['tag_base'] ) ) );
 		}
 		if ( isset( $_POST['permalink'] ) && '' !== $_POST['permalink'] ) {
