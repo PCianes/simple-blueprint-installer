@@ -394,6 +394,27 @@ class Simple_Blueprint_Installer_Control {
 	 */
 	public static function display_plugins( $plugins_string ) {
 
+		$allowed_html = array(
+			'p'        => array(),
+			'span'     => array(
+				'class' => array(),
+			),
+			'strong'   => array(),
+			'br'       => array(),
+			'code'     => array(),
+			'select'   => array(),
+			'optgroup' => array(
+				'label'    => array(),
+				'value'    => array(),
+				'selected' => array(),
+			),
+			'option'   => array(
+				'label'    => array(),
+				'value'    => array(),
+				'selected' => array(),
+			),
+		);
+
 		$plugins_array = self::comma_separated_to_array( $plugins_string );
 
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/views/simple-blueprint-installer-input-view.php';

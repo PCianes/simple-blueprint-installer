@@ -40,7 +40,7 @@
 			?>
 			<?php if ( $themes ) : ?>
 			<tr>
-				<td><label><input name="themes" type="checkbox" checked /><?php esc_html_e( '- All themes to delete:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $themes_names, $allow_html ); ?></label></td>
+				<td><label><input name="themes" type="checkbox" checked /><?php esc_html_e( '- All themes to delete:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $themes_names, $allowed_html ); ?></label></td>
 			</tr>
 			<?php
 				else :
@@ -50,13 +50,13 @@
 			?>
 			<?php if ( '' !== $files_to_delete ) : ?>
 			<tr>
-				<td><label><input name="files" type="checkbox" checked /><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allow_html ); ?></label></td>
+				<td><label><input name="files" type="checkbox" checked /><?php esc_html_e( '- WordPress unnecessary core files to deleted:', 'simple-blueprint-installer' ); ?><?php echo wp_kses( $files_to_delete, $allowed_html ); ?></label></td>
 			</tr>
 			<?php endif; ?>
 			<?php
 			if ( '' !== $files_already_delete ) :
 				esc_html_e( '- WordPress unnecessary core files already deleted: ', 'simple-blueprint-installer' );
-				echo wp_kses( $files_already_delete, $allow_html );
+				echo wp_kses( $files_already_delete, $allowed_html );
 				endif;
 				?>
 		</table>

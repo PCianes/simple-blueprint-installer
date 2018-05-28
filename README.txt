@@ -104,6 +104,9 @@ Note: update the list of slugs with the **`Reset & Update`** button to set it on
 
 == Changelog ==
 
+= 1.0.1 =
+* Freemius insights integration.
+
 = 1.0.0 =
 * First publicly available version
 
