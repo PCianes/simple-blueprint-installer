@@ -166,9 +166,6 @@
 			<tr>
 				<td><label class="sbi-danger"><input name="indexing" type="checkbox" value="0" <?php checked( '0', get_option( 'blog_public' ) ); ?> /><?php esc_html_e( 'Discourage search engines from indexing this site.', 'simple-blueprint-installer' ); ?></label></td>
 			</tr>
-			<tr>
-				<td><label class="sbi-danger"><input name="deactivate" type="checkbox"><?php esc_html_e( 'Deactivate this plugin upon completion. ( You need to manually delete this plugin after it is deactivated to remove it. )', 'simple-blueprint-installer' ); ?></label></td>
-			</tr>
 		</table>
 		<p class="sbi-danger"><a href="plugin-install.php?tab=sbi_blueprint"><?php esc_html_e( 'Wait a minute! Have you already installed all the plugins in this WordPress?', 'simple-blueprint-installer' ); ?></a></p>
 		<input type="hidden" name="action" value="sbi_setup_form">

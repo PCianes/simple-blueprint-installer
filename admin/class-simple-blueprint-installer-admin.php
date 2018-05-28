@@ -419,19 +419,12 @@ class Simple_Blueprint_Installer_Admin {
 		}
 
 		/**
-		 * The last thing to do before deactivate this plugin
+		 * The last thing to do
 		 */
 		flush_rewrite_rules();
 
 		/**
-		 * Deactivate this plugin if user want it
-		 */
-		if ( isset( $_POST['deactivate'] ) && 'on' === $_POST['deactivate'] ) {
-			$this->deactivate_this_plugin();
-		}
-
-		/**
-		 * Go back to settings tab if plugin is not deactivate
+		 * Go back to settings tab
 		 */
 		if ( ! empty( $_POST['_wp_http_referer'] ) ) {
 			wp_safe_redirect( esc_url( $_POST['_wp_http_referer'] ) );
@@ -619,22 +612,6 @@ class Simple_Blueprint_Installer_Admin {
 	 */
 	private function update_indexing_options( $option ) {
 		update_option( 'blog_public', $option );
-	}
-
-	/**
-	 * Deactivate this plugin
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function deactivate_this_plugin() {
-
-		if ( ! function_exists( 'deactivate_plugins' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-
-		deactivate_plugins( 'simple-blueprint-installer/simple-blueprint-installer.php' );
-
 	}
 
 	/**

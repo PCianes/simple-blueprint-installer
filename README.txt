@@ -37,7 +37,7 @@ For more info please see below "Screenshots" and also read "Frequently Asked Que
 
 == 2.- Setup ( gear icon ): ==
 
-Here you can set and perform your own quick configuration options, there is even an option to deactivate this plugin after the task is completed. This tab is beside the other one.
+Here you can set and perform your own quick configuration options. This tab is beside the other one.
 
 The **Quick global settings** available that you can choose what and how to perform at the push of the **`Do these actions`** button are:
 
@@ -59,7 +59,6 @@ The **Quick global settings** available that you can choose what and how to perf
 * Disable pings, trackbacks and comments on new articles.
 * Organize my uploads into month- and year-based folders.
 * Discourage search engines from indexing this site.
-* Deactivate this plugin upon completion.
 
 Note: This options page also informs you of the status of each option, such as if some options have been deleted or not, or the state of others based on what is really established in WordPress.
 
@@ -70,7 +69,7 @@ Note: This options page also informs you of the status of each option, such as i
 3. After the plugin is activated you will be redirected to the management page, with all the plugins already installed as the first blueprint. You can also find it if you go to **`add new plugin`** and then go to new tab: **`Blueprint`**.
 4. You can change this list of plugins with their slugs and press the **`Set plugins`** button to be able to operate with them.
 5. **Important:** Before installing new plugins you may want to delete defaults like **`Hello Dolly`** or **`Akismet`**. For that please press the orange danger button and then **`¡Delete all plugins!`**. After that you can work with your new blueprint = slugs list of your favourite plugins to install.
-6. Go to the other new tab with the icon of a gear and set all your own quickly configuration, even one option to deactivate this plugin after finish the work.
+6. Go to the other new tab with the icon of a gear and set all your own quickly configuration.
 
 == Frequently Asked Questions ==
 
@@ -100,7 +99,6 @@ Note: update the list of slugs with the **`Reset & Update`** button to set it on
 
 1. Blueprint tab.
 2. Setup tab ( icon of a gear )
-3. Setup tab - deactivate this plugin
 
 == Changelog ==
 
