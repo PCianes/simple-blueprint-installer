@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       Simple blueprint installer
  * Description:       Install this as your first plugin and make easy and fast the first setup of your WordPress.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Pablo Cianes
  * Author URI:        https://pablocianes.com/
  * License:           GPL-2.0+
@@ -46,7 +46,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.1' );
+define( 'PLUGIN_NAME_VERSION', '1.0.2' );
 
 /**
  * The code that runs only in dev mode
@@ -56,64 +56,6 @@ define( 'PLUGIN_NAME_VERSION', '1.0.1' );
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 	require_once __DIR__ . '/tests/dev/simple-blueprint-installer-configuration.php';
-}
-
-/**
- * Get the sbi Forms Freemius instance
- *
- * @since 1.0.1
- *
- * @return $sbi_forms_freemius
- */
-function sbi_load_forms_freemius() {
-
-	global $sbi_forms_freemius;
-
-	if ( ! isset( $sbi_forms_freemius ) ) {
-
-		// Include Freemius SDK.
-		require_once plugin_dir_path( __FILE__ ) . 'includes/freemius/start.php';
-
-		$sbi_forms_freemius = fs_dynamic_init(
-			array(
-				'id'             => '2118',
-				'slug'           => 'simple-blueprint-installer',
-				'type'           => 'plugin',
-				'public_key'     => 'pk_c14c7e364a8ba748ac3501f817f83',
-				'is_premium'     => false,
-				'has_addons'     => false,
-				'has_paid_plans' => false,
-				'menu'           => array(
-					'first-path' => 'plugin-install.php?tab=sbi_blueprint',
-					// 'slug'    => 'sbi-forms',
-					'account'    => false,
-					'support'    => false,
-					'contact'    => false,
-				),
-			)
-		);
-
-		/**
-		 * Runs after Freemius loads
-		 *
-		 * @since 1.0.1
-		 *
-		 * @param Freemius $sbi_forms_freemius
-		 */
-		do_action( 'sbi_forms_freemius_init', $sbi_forms_freemius );
-	}
-
-	return $sbi_forms_freemius;
-
-}
-
-/**
- * Load freemius
- *
- * @since 1.0.1
- */
-if ( is_admin() ) {
-	sbi_load_forms_freemius();
 }
 
 /**

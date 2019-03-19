@@ -3,7 +3,7 @@ Contributors: sumapress, pablocianes
 Donate link: https://pablocianes.com/
 Tags: blueprint, installer, delete default content, installation, setup
 Requires at least: 4.6
-Tested up to: 5.0
+Tested up to: 5.1
 Stable tag: trunk
 Requires PHP: 5.2.4
 License: GPLv2 or later
@@ -101,6 +101,9 @@ Note: update the list of slugs with the **`Reset & Update`** button to set it on
 2. Setup tab ( icon of a gear )
 
 == Changelog ==
+
+= 1.0.2 =
+* Remove Freemius.
 
 = 1.0.1 =
 * Freemius insights integration.

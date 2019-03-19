@@ -31,7 +31,7 @@ class Simple_Blueprint_Installer_Activator {
 	 */
 	public static function activate() {
 
-		//add_option( 'sbi_do_activation_redirect', 'redirect' );
+		add_option( 'sbi_do_activation_redirect', 'redirect' );
 		add_option( 'sbi_plugins_blueprint', Simple_Blueprint_Installer_Control::get_all_plugins_installed_by_slug() );
 
 	}
